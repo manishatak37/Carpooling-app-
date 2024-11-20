@@ -13,13 +13,16 @@
     <string name="map_options">This is the map_options</string>
 
 
-<!--    <string name="osmdroid_base_path">/sdcard/osmdroid/</string>-->
+    <string name="osmdroid_base_path">/sdcard/osmdroid/</string>
     <string name="date_format">%d/%d/%d</string>
+    <string name="user_photo_desc">human image\n</string>
     <string-array name="travel_preferences">
         <item>I’m chatty when I feel comfortable</item>
         <item>I’ll jam depending on the mood</item>
         <item>Cigarette breaks outside the car are ok</item>
         <item>I’ll travel with pets depending on the animal</item>
     </string-array>
+
+    <string name="default_web_client_id">default_web_client_id373802194568-h6d3n2qr47f9g9temrg6i2mr0mvmd6er.apps.googleusercontent.com"></string>
 
 </resources>

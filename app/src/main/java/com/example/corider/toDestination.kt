@@ -40,7 +40,7 @@ class toDestination : AppCompatActivity() { // Class name should start with an u
     private inner class WebAppInterface(private val activity: toDestination) {
 
         @JavascriptInterface
-        fun storeLocation(lat: Double, lon: Double) {
+        fun storeEndLocation(lat: Double, lon: Double) {
             activity.storeEndLocation(lat, lon)
         }
 

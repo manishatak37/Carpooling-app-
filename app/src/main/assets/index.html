@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,96 +8,121 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
-            position: relative; /* Allow absolute positioning within */
+            position: relative;
+            /* Allow absolute positioning within */
         }
+
         #map {
             height: 100%;
             width: 100%;
         }
+
         .next-button {
             position: absolute;
-            bottom: 20px; /* Move to the bottom */
+            bottom: 20px;
+            /* Move to the bottom */
             right: 20px;
-            background-color: #4CAF50; /* Green background */
-            color: white; /* White text */
+            background-color: #4CAF50;
+            /* Green background */
+            color: white;
+            /* White text */
             border: none;
             padding: 10px 15px;
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            z-index: 1000; /* Ensure it's on top of the map */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            /* Ensure it's on top of the map */
         }
+
         .next-button:hover {
-            background-color: #45a049; /* Darker green on hover */
+            background-color: #45a049;
+            /* Darker green on hover */
         }
     </style>
 </head>
+
 <body>
 <div id="map"></div>
 <button class="next-button" onclick="goToNextPage()">→ Next</button>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script src="coderdefine.js"></script>
 <script>
-    console.log("Index HTML loaded successfully!");
+        console.log("Index HTML loaded successfully!");
 
-    var map = L.map('map').setView([19.017615, 72.856164], 13); // Dadar Coordinates
+        var map = L.map('map').setView([19.017615, 72.856164], 13); // Dadar Coordinates
 
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19
-    }).addTo(map);
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
 
-    // Add geocoding control with Nominatim
-    var geocoder = L.Control.geocoder({
-        defaultMarkGeocode: true,
-        geocoder: new L.Control.Geocoder.Nominatim(),
-        collapsed: false,
-        placeholder: 'Enter starting point...'
-    }).addTo(map);
+        // Add geocoding control with Nominatim
+        var geocoder = L.Control.geocoder({
+            defaultMarkGeocode: true,  // Marks the result automatically on the map
+            geocoder: new L.Control.Geocoder.Nominatim(),  // Uses Nominatim as the geocoder service
+            collapsed: false,  // Keeps the geocoder control expanded by default
+            placeholder: 'Enter starting point...'  // Text shown inside the search box
+        }).addTo(map);
 
-    var selectedLocation = null; // Variable to store the selected location
+        var selectedLat, selectedLng;  // Variables to store the selected location's latitude and longitude
 
-    // Handle geocoding results
-    geocoder.options.geocoder.geocode('Dadar', function(results) {
-        if (results.length) {
-            var result = results[0];
-            map.setView(result.center, 13);
-            L.marker(result.center).addTo(map).bindPopup(result.name).openPopup();
-            console.log("Geocoded Dadar successfully.");
-        } else {
-            console.error("Geocoding failed.");
+        // Listen for the 'markgeocode' event when a user selects a geocoding result
+        geocoder.on('markgeocode', function (event) {
+            var result = event.geocode;  // Get the selected geocode result
+            selectedLat = result.center.lat;  // Store the latitude in a variable
+            selectedLng = result.center.lng;  // Store the longitude in a variable
+
+            console.log("Selected Location:", result.name);  // Print the name of the selected location
+            console.log("Coordinates:", result.center);  // Print the coordinates of the selected location
+            console.log("Latitude:", selectedLat);  // Print the latitude
+            console.log("Longitude:", selectedLng);  // Print the longitude
+        });
+
+
+        // Variable to store the selected location
+
+        // Handle geocoding results
+        geocoder.options.geocoder.geocode('Dadar', function (results) {
+            if (results.length) {
+                var result = results[0];
+                map.setView(result.center, 13);
+                L.marker(result.center).addTo(map).bindPopup(result.name).openPopup();
+                console.log("Geocoded Dadar successfully.");
+            } else {
+                console.error("Geocoding failed.");
+            }
+
+
+        });
+
+
+        // Add marker click event to store selected location
+        // map.on('click', function(e) {
+        //     var lat = e.latlng.lat;
+        //     var lng = e.latlng.lng;
+        //     selectedLocation = lat + "," + lng; // Store the location as a string
+        //     L.marker(e.latlng).addTo(map).bindPopup("Selected: " + selectedLocation).openPopup();
+        //     console.log("Selected location: " + selectedLocation);
+        // });
+
+        // Function to navigate to the next page
+        function goToNextPage() {
+            if (selectedLat !== undefined && selectedLng !== undefined) {
+                // Send the selected location to the Android activity
+                AndroidInterface.storeLocation(selectedLat, selectedLng);
+                AndroidInterface.goToNextActivity();
+            }
+
+            // Call the method to start the next activity
         }
-    });
 
-    // Add marker click event to store selected location
-    map.on('click', function(e) {
-        var lat = e.latlng.lat;
-        var lng = e.latlng.lng;
-        selectedLocation = lat + "," + lng; // Store the location as a string
-        L.marker(e.latlng).addTo(map).bindPopup("Selected: " + selectedLocation).openPopup();
-        console.log("Selected location: " + selectedLocation);
-    });
-
-    // Function to navigate to the next page
-    function goToNextPage() {
-        if (selectedLocation) {
-            // Split the selectedLocation string into latitude and longitude
-            var latLng = selectedLocation.split(',');
-            var lat = parseFloat(latLng[0]);
-            var lng = parseFloat(latLng[1]);
-
-            // Send the selected location to the Android activity
-            AndroidInterface.storeLocation(lat, lng);
-        }
-        // Call the method to start the next activity
-        AndroidInterface.goToNextActivity();
-    }
-</script>
-
-
+    </script>
 </body>
+
 </html>

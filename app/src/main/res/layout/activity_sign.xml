@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_login"
-          />
+        />
 
 
     <TextView
@@ -65,7 +65,7 @@
         android:layout_height="57dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/newwhitebutton"
-        android:drawableLeft="@drawable/emaillogo__1_"
+        android:drawableLeft="@drawable/emaillogo_1"
         android:drawablePadding="15dp"
         android:elevation="5dp"
         android:ems="10"

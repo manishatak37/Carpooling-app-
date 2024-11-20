@@ -57,23 +57,26 @@ class RidePublishForm : AppCompatActivity() {
         // Get input values
         val date = dateInput.text.toString().trim()
         val time = timeInput.text.toString().trim()
-        val passengers = passengerInput.text.toString().trim()
+        val passengersInput = passengerInput.text.toString().trim()
+        val passengers = passengersInput.toInt()
+
         val carModel = carModelInput.text.toString().trim()
 
         // Validate inputs
-        if (date.isEmpty() || time.isEmpty() || passengers.isEmpty() || carModel.isEmpty()) {
+        if (date.isEmpty() || time.isEmpty() || passengersInput.isEmpty() || carModel.isEmpty()) {
             Log.e("RidePublishForm", "Please fill in all fields.")
             Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
             return
         }
 
+
         // Save the ride details in SharedPreferences
         val sharedPreferences = getSharedPreferences("RideDetails", MODE_PRIVATE)
         with(sharedPreferences.edit()) {
-            putString("date", date)
-            putString("time", time)
-            putString("passengers", passengers)
-            putString("carModel", carModel)
+            putString("departure_date", date)
+            putString("departure_time", time)
+            putInt("available_seats", passengers)
+            putString("car_model", carModel)
             apply()
         }
 

@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import android.util.Log
 
 class RidePublishForm2 : AppCompatActivity() {
 
@@ -26,29 +27,34 @@ class RidePublishForm2 : AppCompatActivity() {
     }
 
     private fun publishRide() {
-        val cost = costInput.text.toString().trim() // Trim whitespace
-
+        val cost = costInput.text.toString().trim()// Trim whitespace
         if (cost.isNotEmpty()) {
-            currentCost = cost // Store cost in the temporary variable
+            // Try to convert the string to a Float
+            val currentCost = cost.toFloatOrNull()
+            Log.e("PublishSuccess", "Code executed till here")
+            if (currentCost != null) {
+                // Successfully converted to Float, now save it in SharedPreferences
+                val sharedPreferences = getSharedPreferences("RideDetails", MODE_PRIVATE)
+                with(sharedPreferences.edit()) {
+                    putFloat("cost", currentCost) // Store the cost as a float
+                    apply() // Commit the changes
+                }
+                // Handle the cost submission logic here (e.g., saving to a database)
+                Toast.makeText(this, "Ride cost of ₹$cost published!", Toast.LENGTH_SHORT).show()
 
-            // Save the cost in SharedPreferences
-            val sharedPreferences = getSharedPreferences("RideDetails", MODE_PRIVATE)
-            with(sharedPreferences.edit()) {
-                putString("cost", currentCost) // Store the cost
-                apply() // Commit the changes
+                // Start the success activity
+                val intent = Intent(this, PublishSucess::class.java) // Ensure PublishSuccess is your success activity
+                startActivity(intent)
+
+                // Clear the input after publishing
+                costInput.text.clear()
+            } else {
+                // Handle the case where the cost is not a valid float
+
+                Log.e("PublishSuccess", "Invalid cost value entered. Please enter a valid number.")
+                // You can show a user-friendly error message here
             }
-
-            // Handle the cost submission logic here (e.g., saving to a database)
-            Toast.makeText(this, "Ride cost of ₹$cost published!", Toast.LENGTH_SHORT).show()
-
-            // Start the success activity
-            val intent = Intent(this, PublishSucess::class.java) // Ensure PublishSuccess is your success activity
-            startActivity(intent)
-
-            // Clear the input after publishing
-            costInput.text.clear()
-        } else {
-            Toast.makeText(this, "Please enter a valid cost.", Toast.LENGTH_SHORT).show()
         }
+
     }
 }
