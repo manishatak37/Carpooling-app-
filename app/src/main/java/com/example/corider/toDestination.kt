@@ -12,8 +12,9 @@ import androidx.appcompat.app.*
 
 class toDestination : AppCompatActivity() { // Class name should start with an uppercase letter
     private lateinit var webView: WebView
-    private var endLatitude: Double? = null
+
     private var endLongitude: Double? = null
+    private var endLatitude: Double? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
