@@ -53,6 +53,7 @@ class PublishSucess : AppCompatActivity() {
     private fun loadRideDetails(): RideInfo? {
         val sharedPreferences = getSharedPreferences("RideDetails", MODE_PRIVATE)
 
+
         // Retrieve the user_id from SharedPreferences
         val userId = "1" // Assuming this is a constant or retrieved differently
 
