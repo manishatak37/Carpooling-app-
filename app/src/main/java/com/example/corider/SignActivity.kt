@@ -22,6 +22,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.corider.model.User
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class SignActivity : AppCompatActivity() {
 
@@ -162,9 +164,10 @@ class SignActivity : AppCompatActivity() {
 
         // Ensure currentUser is not null before using it
         auth.currentUser?.let { user ->
-            val creationDate: Long = System.currentTimeMillis()
+            val creationDate: String = SimpleDateFormat("yyyy-MM-dd").format(Date())
 
-            val userModel = User(newUserId.toString(), userName, email, userPassword, creationDate)
+
+            val userModel = User(newUserId, userName, email, userPassword, creationDate)
 
             // Get a unique key for the new user entry
             val newUserKey = database.child("user").push().key

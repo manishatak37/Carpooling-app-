@@ -55,7 +55,7 @@ class PublishSucess : AppCompatActivity() {
 
 
         // Retrieve the user_id from SharedPreferences
-        val userId = "1" // Assuming this is a constant or retrieved differently
+        val userId = 1 // Assuming this is a constant or retrieved differently
 
         // Get the rest of the ride details from SharedPreferences
         val startLatitude = sharedPreferences.getFloat("start_latitude", -1f).toDouble()
@@ -78,7 +78,7 @@ class PublishSucess : AppCompatActivity() {
 
         // Return the new RideInfo object with the generated ride_id
         return RideInfo(
-            ride_id = newRideId.toString(), // Convert to string to match the RideInfo model
+            ride_id = newRideId, // Convert to string to match the RideInfo model
             user_id = userId,
             start_latitude = startLatitude,
             start_longitude = startLongitude,
@@ -94,24 +94,24 @@ class PublishSucess : AppCompatActivity() {
     }
 
     private fun saveRideToDatabase(ride: RideInfo) {
-        // Save the new ride to Firebase under the rides node with the incremented ride_id
-        val newRideKey = database.child("RideInfo").child(ride.ride_id)
-        newRideKey.setValue(ride)
-            .addOnSuccessListener {
-                // Successfully saved the ride
-                Log.d("Database", "Ride data saved successfully")
+        // Generate a new key under the "RideInfo" node
+        val newRideKey = database.child("RideInfo").push().key
 
-                // Update the ride_counter in SharedPreferences
-                val sharedPreferences = getSharedPreferences("RideDetails", MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-
-                // Use the newRideId to update the ride_counter as an integer
-                editor.putInt("ride_counter", ride.ride_id?.toInt() ?: 1)  // Default to 1 if ride_id is null
-                editor.apply()
-            }
-            .addOnFailureListener {
-                // Handle failure to save ride data
-                Log.d("Database", "Failed to save ride data", it)
-            }
+        // Ensure the key is not null
+        if (newRideKey != null) {
+            // Set the ride data under the new key
+            database.child("RideInfo").child(newRideKey).setValue(ride)
+                .addOnSuccessListener {
+                    // Successfully saved the ride
+                    Log.d("Database", "Ride data saved successfully")
+                }
+                .addOnFailureListener {
+                    // Handle failure to save ride data
+                    Log.e("Database", "Failed to save ride data", it)
+                }
+        } else {
+            Log.e("Database", "Failed to generate a new ride key")
+        }
     }
+
 }

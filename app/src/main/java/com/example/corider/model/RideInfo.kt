@@ -1,8 +1,8 @@
 package com.example.corider.model
 
 data class RideInfo(
-    val ride_id: String,
-    val user_id: String,
+    val ride_id: Int,
+    val user_id: Int,
     val start_latitude: Double,
     val start_longitude: Double,
     val end_latitude: Double,
