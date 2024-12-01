@@ -18,7 +18,7 @@
     <item
         android:title="@string/inbox_title"
         android:icon="@drawable/inbox"
-        android:id="@+id/inboxFragment"/>
+        android:id="@+id/inbox"/>
 
     <item
         android:title="@string/profile_title"

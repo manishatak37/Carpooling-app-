@@ -46,6 +46,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.fragment:fragment:1.8.5'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
 
     // Firebase BoM (manages Firebase SDK versions)
     implementation platform('com.google.firebase:firebase-bom:32.1.1')

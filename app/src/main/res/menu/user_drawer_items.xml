@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/profile"
+        android:id="@+id/BookRide"
+        android:title="Book Ride" />
+    <item
+        android:id="@+id/ViewRides"
+        android:icon="@drawable/profile"
+        android:title="View Rides" />
+    <item
+        android:id="@+id/Inbox"
+        android:icon="@drawable/profile"
+        android:title="Inbox" />
+    <item
+        android:icon="@drawable/profile"
+        android:id="@+id/About"
+        android:title="About" />
+    <item
+        android:icon="@drawable/profile"
+        android:id="@+id/Profile"
+        android:title="Profile" />
+</menu>
