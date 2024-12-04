@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map for Carpooling</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            position: relative;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        .next-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .next-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+<div id="map"></div>
+<button class="next-button" onclick="proceedToNextStep()">→ Next</button>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script>
+        console.log("Ride Results HTML loaded successfully!");
+
+        var map = L.map('map').setView([19.017615, 72.856164], 13); // Dadar Coordinates
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        // Add geocoding control with Nominatim
+        var geocoder = L.Control.geocoder({
+            defaultMarkGeocode: true,
+            geocoder: new L.Control.Geocoder.Nominatim(),
+            collapsed: false,
+            placeholder: 'Enter Destination'
+        }).addTo(map);
+
+        var destinationLat, destinationLng;  // Store the selected destination's latitude and longitude
+
+        // Listen for the 'markgeocode' event when a user selects a geocoding result
+        geocoder.on('markgeocode', function (event) {
+            var result = event.geocode;
+            destinationLat = result.center.lat;
+            destinationLng = result.center.lng;
+
+            console.log("Selected Destination:", result.name);
+            console.log("Coordinates:", result.center);
+            console.log("Latitude:", destinationLat);
+            console.log("Longitude:", destinationLng);
+        });
+
+        // Function to navigate to the next step
+        function proceedToNextStep() {
+            if (destinationLat !== undefined && destinationLng !== undefined) {
+                // Send the destination location to the Android activity
+                AndroidBridge.saveDestinationLocation(destinationLat, destinationLng);
+                AndroidBridge.proceedToNextStep();
+            }
+        }
+    </script>
+</body>
+
+</html>

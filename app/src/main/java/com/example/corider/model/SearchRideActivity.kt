@@ -1,4 +1,7 @@
-package com.example.corider // Replace with your actual package name
+package com.example.corider.model
+
+
+
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,15 +11,16 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import com.example.corider.R
 
-class PublishActivity : AppCompatActivity() {
+class SearchRideActivity : AppCompatActivity() {
     private lateinit var webView: WebView
-    private var startLatitude: Double? = null
-    private var startLongitude: Double? = null
+    private var pickupLatitude: Double? = null
+    private var pickupLongitude: Double? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_publish2) // Ensure this matches your layout file name
+        setContentView(R.layout.activity_search_ride) // Ensure this matches your layout file name
 
         webView = findViewById(R.id.webView2)
         webView.webViewClient = WebViewClient()
@@ -27,42 +31,42 @@ class PublishActivity : AppCompatActivity() {
         webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 
         // Add JavaScript interface
-        webView.addJavascriptInterface(WebAppInterface(this), "AndroidInterface")
+        webView.addJavascriptInterface(WebAppBridge(this), "AndroidBridge")
 
         // Load the local HTML file
-        webView.loadUrl("file:///android_asset/index.html")
+        webView.loadUrl("file:///android_asset/search_ride.html")
 
         // Enable debugging (optional)
         WebView.setWebContentsDebuggingEnabled(true)
     }
 
     // JavaScript Interface class
-    private inner class WebAppInterface(private val activity: PublishActivity) {
+    private inner class WebAppBridge(private val activity: SearchRideActivity) {
         @JavascriptInterface
-        fun storeLocation(lat: Double, lon: Double) {
-            activity.storeLocation(lat, lon)
+        fun savePickupLocation(latitude: Double, longitude: Double) {
+            activity.savePickupLocation(latitude, longitude)
         }
 
         @JavascriptInterface
-        fun goToNextActivity() {
-            val intent = Intent(activity, toDestination::class.java) // Ensure this is your actual destination Activity
+        fun navigateToResults() {
+            val intent = Intent(activity, RideResultsActivity::class.java) // Ensure this is your actual destination Activity
             activity.startActivity(intent)
         }
     }
 
-    private fun storeLocation(lat: Double, lon: Double) {
-        startLatitude = lat
-        startLongitude = lon
+    private fun savePickupLocation(latitude: Double, longitude: Double) {
+        pickupLatitude = latitude
+        pickupLongitude = longitude
 
         // Save location to SharedPreferences
-        val sharedPreferences = getSharedPreferences("RideDetails", MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("SearchRidePrefs", MODE_PRIVATE)
         with(sharedPreferences.edit()) {
-            putFloat("start_latitude", lat.toFloat())
-            putFloat("start_longitude", lon.toFloat())
+            putFloat("pickup_latitude", latitude.toFloat())
+            putFloat("pickup_longitude", longitude.toFloat())
             apply() // Commit changes
         }
 
-        Log.d("PublishActivity", "Location stored: Start Latitude = $startLatitude, Start Longitude = $startLongitude")
+        Log.d("SearchRideActivity", "Pickup location saved: Latitude = $pickupLatitude, Longitude = $pickupLongitude")
     }
 
     override fun onBackPressed() {

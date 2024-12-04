@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    android:layout_marginBottom="8dp"
+    android:elevation="2dp">
+
+    <!-- Ride Information -->
+    <TextView
+        android:id="@+id/rideTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Driver: John Doe"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"/> <!-- Black text for high contrast -->
+
+    <TextView
+        android:id="@+id/rideDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pickup: Location A"
+        android:textSize="16sp"
+        android:textColor="#333333"/>
+    <TextView
+        android:id="@+id/rideDetailss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Drop-off: Location B"
+        android:textSize="16sp"
+        android:textColor="#333333"/>
+
+
+
+
+    <TextView
+        android:id="@+id/carModel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Car Model: Toyota Camry"
+        android:textSize="16sp"
+        android:textColor="#333333"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/departureDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Departure Date: 12th Dec, 2024"
+        android:textSize="16sp"
+        android:textColor="#333333"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/departureTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Departure Time: 10:00 AM"
+        android:textSize="16sp"
+        android:textColor="#333333"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/pricePerSeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Price per Seat: $25"
+        android:textSize="16sp"
+        android:textColor="#333333"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Book Ride Button with improved contrast -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bookRideButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Book Ride"
+        android:background="@drawable/newgreenbuttongradient"
+    android:layout_marginTop="16dp"/>
+</LinearLayout>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -50,7 +49,7 @@
 
 <body>
 <div id="map"></div>
-<button class="next-button" onclick="goToNextPage()">→ Next</button>
+<button class="next-button" onclick="goToSearchResults()">→ Next</button>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="coderdefine.js"></script>
 <script>
@@ -68,63 +67,33 @@
             defaultMarkGeocode: true,  // Marks the result automatically on the map
             geocoder: new L.Control.Geocoder.Nominatim(),  // Uses Nominatim as the geocoder service
             collapsed: false,  // Keeps the geocoder control expanded by default
-            placeholder: 'Enter Destination'  // Text shown inside the search box
+            placeholder: 'Enter starting point...'  // Text shown inside the search box
         }).addTo(map);
 
-        var selectedLat, selectedLng;  // Variables to store the selected location's latitude and longitude
+        var selectedPickupLat, selectedPickupLng;  // Variables to store the selected location's latitude and longitude
 
         // Listen for the 'markgeocode' event when a user selects a geocoding result
         geocoder.on('markgeocode', function (event) {
             var result = event.geocode;  // Get the selected geocode result
-            selectedLat = result.center.lat;  // Store the latitude in a variable
-            selectedLng = result.center.lng;  // Store the longitude in a variable
+            selectedPickupLat = result.center.lat;  // Store the latitude in a variable
+            selectedPickupLng = result.center.lng;  // Store the longitude in a variable
 
-            console.log("Selected Location:", result.name);  // Print the name of the selected location
+            console.log("Selected Pickup Location:", result.name);  // Print the name of the selected location
             console.log("Coordinates:", result.center);  // Print the coordinates of the selected location
-            console.log("Latitude:", selectedLat);  // Print the latitude
-            console.log("Longitude:", selectedLng);  // Print the longitude
+            console.log("Latitude:", selectedPickupLat);  // Print the latitude
+            console.log("Longitude:", selectedPickupLng);  // Print the longitude
         });
-
-
-        // Variable to store the selected location
-
-        // Handle geocoding results
-        geocoder.options.geocoder.geocode('Dadar', function (results) {
-            if (results.length) {
-                var result = results[0];
-                map.setView(result.center, 13);
-                L.marker(result.center).addTo(map).bindPopup(result.name).openPopup();
-                console.log("Geocoded Dadar successfully.");
-            } else {
-                console.error("Geocoding failed.");
-            }
-
-
-        });
-
-
-        // Add marker click event to store selected location
-        // map.on('click', function(e) {
-        //     var lat = e.latlng.lat;
-        //     var lng = e.latlng.lng;
-        //     selectedLocation = lat + "," + lng; // Store the location as a string
-        //     L.marker(e.latlng).addTo(map).bindPopup("Selected: " + selectedLocation).openPopup();
-        //     console.log("Selected location: " + selectedLocation);
-        // });
 
         // Function to navigate to the next page
-        function goToNextPage() {
-            if (selectedLat !== undefined && selectedLng !== undefined) {
+        function goToSearchResults() {
+            if (selectedPickupLat !== undefined && selectedPickupLng !== undefined) {
                 // Send the selected location to the Android activity
-                  AndroidInterface.storeEndLocation(selectedLat, selectedLng);
-                AndroidInterface.goToNextActivity();
+                AndroidBridge.savePickupLocation(selectedPickupLat, selectedPickupLng);
+                AndroidBridge.navigateToResults();
             }
-
-
-            // Call the method to start the next activity
         }
 
-    </script>
+</script>
 </body>
 
 </html>
