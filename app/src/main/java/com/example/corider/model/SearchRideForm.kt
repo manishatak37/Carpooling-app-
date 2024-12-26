@@ -10,7 +10,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.corider.R
-import com.example.corider.ride_resultsonsearch
+
+
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.util.*
@@ -137,7 +138,12 @@ public class SearchRideForm : AppCompatActivity() {
                     Toast.makeText(this, "Ride search submitted.", Toast.LENGTH_SHORT).show()
 
                     // Move to the next activity or page
+                    //val intent = Intent(this, ride_resultsonsearch::class.java)
                     val intent = Intent(this, ride_resultsonsearch::class.java)
+                    intent.putExtra("pickup_latitude", pickupLatitude)
+                    intent.putExtra("pickup_longitude", pickupLongitude)
+                    intent.putExtra("destination_latitude", destinationLatitude)
+                    intent.putExtra("destination_longitude", destinationLongitude)
                     startActivity(intent)
 
                     // Clear the input fields

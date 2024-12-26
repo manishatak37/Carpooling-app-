@@ -10,6 +10,7 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.example.corider.R
 
+
 public class RideResultsActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView

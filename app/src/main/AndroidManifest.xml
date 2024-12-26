@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -10,6 +9,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
 
     <application
         android:allowBackup="true"
@@ -22,71 +24,116 @@
         android:theme="@style/Theme.Corider"
         tools:targetApi="31">
 
-        <!-- Activities -->
-        <activity android:name=".Publishmap1"
-            android:exported="false" />
-
-        <activity android:name=".RegisteredUsersActivity"
-            android:exported="false" />
         <activity
-            android:name=".model.SearchRideForm"
-            android:exported="true" />
+            android:name=".model.ride_resultsonsearch"
+            android:exported="true"/>
+
+
+
+
+
+
+
+        <activity android:name=".model.SearchRideForm"
+            android:exported="true"/>
+
+
+
         <activity
-            android:name=".ride_resultsonsearch"
-            android:exported="true" />
+            android:name=".UserNavigation"
+            android:exported="true"/>
 
+        <activity
+            android:name=".UserHomePage"
+            android:exported="true"/>
+        <activity
+            android:name=".DriverHomePage"
+            android:exported="true"/>
 
-
+        <activity
+            android:name=".DriverNavigation"
+            android:exported="true"/>
         <activity android:name=".model.SearchRideActivity"
-            android:exported="true">
+            android:exported="true"/>
+
+        <activity
+            android:name=".PublishActivity"
+            android:exported="true" >
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".Admin_home_page"
+        <activity
+            android:name=".DriverInbox"
+            android:exported="false" />
+        <activity
+            android:name=".DriverProfile"
             android:exported="false" />
 
-        <activity android:name=".PublishSucess"
+
+
+
+
+
+
+
+        <activity
+            android:name=".model.RideResultsActivity"
             android:exported="true" />
 
-        <activity android:name=".model.RideResultsActivity"
+
+
+
+
+
+
+
+        <activity
+            android:name=".Publishmap1"
+            android:exported="false" />
+        <activity
+            android:name=".RegisteredUsersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Admin_home_page"
+            android:exported="true" />
+        <activity
+            android:name=".PublishSucess"
+            android:exported="true" />
+        <activity
+            android:name=".RidePublishForm2"
+            android:exported="true" />
+        <activity
+            android:name=".toDestination"
+            android:exported="true" />
+        <activity
+            android:name=".RidePublishForm"
             android:exported="true" />
 
-        <activity android:name=".RidePublishForm2"
+        <activity
+            android:name=".SignActivity"
             android:exported="true" />
-
-        <activity android:name=".toDestination"
+        <activity
+            android:name=".LoginActivity"
             android:exported="true" />
-
-
-        <activity android:name=".RidePublishForm"
+        <activity
+            android:name=".StartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true" />
-
-        <activity android:name=".PublishActivity"
-            android:exported="true" />
-
-        <activity android:name=".SignActivity"
+        <activity
+            android:name=".Splash_Screen"
             android:exported="false" />
 
-        <activity android:name=".LoginActivity"
-            android:exported="true" />
-
-        <activity android:name=".StartActivity"
-            android:exported="false" />
-
-        <activity android:name=".MainActivity"
-            android:exported="false" />
-
-        <activity android:name=".Splash_Screen"
-            android:exported="false" />
-
-        <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="YOUR_API_KEY_HERE" />
-
     </application>
 
 </manifest>

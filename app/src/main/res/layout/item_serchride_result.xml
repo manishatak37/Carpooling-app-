@@ -23,15 +23,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pickup: Location A"
+        android:textColor="#333333"
+
         android:textSize="16sp"
-        android:textColor="#333333"/>
+        android:textStyle="bold" />
     <TextView
-        android:id="@+id/rideDetailss"
+        android:id="@+id/rideDetailDrop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Drop-off: Location B"
         android:textSize="16sp"
-        android:textColor="#333333"/>
+        android:textColor="#333333"
+        android:textStyle="bold"/>
 
 
 
@@ -43,7 +46,8 @@
         android:text="Car Model: Toyota Camry"
         android:textSize="16sp"
         android:textColor="#333333"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/departureDate"
@@ -52,7 +56,8 @@
         android:text="Departure Date: 12th Dec, 2024"
         android:textSize="16sp"
         android:textColor="#333333"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/departureTime"
@@ -61,7 +66,8 @@
         android:text="Departure Time: 10:00 AM"
         android:textSize="16sp"
         android:textColor="#333333"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/pricePerSeat"
@@ -70,7 +76,8 @@
         android:text="Price per Seat: $25"
         android:textSize="16sp"
         android:textColor="#333333"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"/>
 
     <!-- Book Ride Button with improved contrast -->
     <androidx.appcompat.widget.AppCompatButton

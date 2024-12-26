@@ -1,27 +1,35 @@
-package com.example.corider
+package com.example.corider.model
 
-import android.app.Activity
+import RideAdapter
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.corider.adapter.RideAdapter
-import com.example.corider.model.Ride
-import com.example.corider.model.RideInfo
-import com.example.corider.model.toRide
 import com.google.firebase.database.*
+import android.location.Geocoder
+import com.example.corider.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import java.util.*
 
-public class ride_resultsonsearch : AppCompatActivity() {
+
+class ride_resultsonsearch : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RideAdapter
     private lateinit var database: DatabaseReference
+    private lateinit var auth: FirebaseAuth
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_serch_ride_resultpage)
+
+        auth = Firebase.auth
+        val userId = auth.currentUser?.uid.toString()
 
         // Initialize Firebase Database reference
         database = FirebaseDatabase.getInstance().reference.child("RideInfo")
@@ -29,96 +37,54 @@ public class ride_resultsonsearch : AppCompatActivity() {
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.searchResultsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = RideAdapter(listOf())
+        adapter = RideAdapter(listOf(),this,userId)
         recyclerView.adapter = adapter
 
-        // Fetch search criteria from intent or SharedPreferences
-        val searchLatitude = intent.getDoubleExtra("pickup_latitude", 0.0)
-        val searchLongitude = intent.getDoubleExtra("pickup_longitude", 0.0)
-        val searchDate = intent.getStringExtra("departure_date")
-        val searchTime = intent.getStringExtra("departure_time")
+        // Fetch search criteria from intent
+        val pickupLatitude = intent.getDoubleExtra("pickup_latitude", 0.0)
+        val pickupLongitude = intent.getDoubleExtra("pickup_longitude", 0.0)
+        val destinationLatitude = intent.getDoubleExtra("destination_latitude", 0.0)
+        val destinationLongitude = intent.getDoubleExtra("destination_longitude", 0.0)
+
+        // Log the values to ensure they are correct
+        Log.d("SearchResults", "Pickup: $pickupLatitude, $pickupLongitude")
+        Log.d("SearchResults", "Destination: $destinationLatitude, $destinationLongitude")
 
         // Search for rides in Firebase
-        fetchRides(searchLatitude, searchLongitude, searchDate, searchTime)
+        fetchRides(pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude)
     }
 
     private fun fetchRides(
-        searchLatitude: Double,
-        searchLongitude: Double,
-        searchDate: String?,
-        searchTime: String?
+        pickupLatitude: Double,
+        pickupLongitude: Double,
+        destinationLatitude: Double,
+        destinationLongitude: Double
     ) {
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val ridesList = mutableListOf<Ride>()
+                val ridesList = mutableListOf<RideInfo>()
                 for (rideSnapshot in snapshot.children) {
-                    var rideInfo = rideSnapshot.getValue(RideInfo::class.java)
+                    val rideInfo = rideSnapshot.getValue(RideInfo::class.java)
                     if (rideInfo != null) {
-                        // Handle conversion for each field that might be a Long or String
-                        rideInfo.departure_date = rideSnapshot.child("departure_date").value?.let {
-                            when (it) {
-                                is Long -> it.toString()  // Convert Long to String if it's stored as Long
-                                is String -> it            // Keep it as String if already a String
-                                else -> ""                 // Default to empty string for any other type
-                            }
-                        } ?: ""  // Default to empty string if departure_date is null
+                        // Fetch human-readable place names
+                        val pickupPlace = getPlaceName(rideInfo.start_latitude, rideInfo.start_longitude)
+                        val destinationPlace = getPlaceName(rideInfo.end_latitude, rideInfo.end_longitude)
 
-                        rideInfo.ride_id = rideSnapshot.child("ride_id").value?.let {
-                            when (it) {
-                                is Long -> it.toString()  // Convert Long to String if it's stored as Long
-                                is String -> it            // Keep it as String if already a String
-                                else -> ""                 // Default to empty string for other types
-                            }
-                        } ?: ""  // Default to empty string if ride_id is null
+                        // Log each ride data
+                        Log.d("SearchResults", "Pickup: $pickupPlace, Destination: $destinationPlace")
 
-                        rideInfo.start_latitude = rideSnapshot.child("start_latitude").value?.let {
-                            when (it) {
-                                is Double -> it             // Keep it as Double if already a Double
-                                is Long -> it.toDouble()    // Convert Long to Double if it's stored as Long
-                                is String -> it.toDoubleOrNull() ?: 0.0 // Convert String to Double safely
-                                else -> 0.0                 // Default to 0.0 for any other type
-                            }
-                        } ?: 0.0  // Default to 0.0 if start_latitude is null
-
-                        rideInfo.start_longitude = rideSnapshot.child("start_longitude").value?.let {
-                            when (it) {
-                                is Double -> it             // Keep it as Double if already a Double
-                                is Long -> it.toDouble()    // Convert Long to Double if it's stored as Long
-                                is String -> it.toDoubleOrNull() ?: 0.0 // Convert String to Double safely
-                                else -> 0.0                 // Default to 0.0 for any other type
-                            }
-                        } ?: 0.0  // Default to 0.0 if start_longitude is null
-
-                        rideInfo.end_latitude = rideSnapshot.child("end_latitude").value?.let {
-                            when (it) {
-                                is Double -> it
-                                is Long -> it.toDouble()
-                                is String -> it.toDoubleOrNull() ?: 0.0
-                                else -> 0.0
-                            }
-                        } ?: 0.0
-
-                        rideInfo.end_longitude = rideSnapshot.child("end_longitude").value?.let {
-                            when (it) {
-                                is Double -> it
-                                is Long -> it.toDouble()
-                                is String -> it.toDoubleOrNull() ?: 0.0
-                                else -> 0.0
-                            }
-                        } ?: 0.0
-
-                        // Add more fields if necessary in a similar manner
-
-                        if (isExactMatch(rideInfo, searchLatitude, searchLongitude, searchDate, searchTime)) {
-                            ridesList.add(rideInfo.toRide())  // Convert RideInfo to Ride
-                        } else if (isNearbyMatch(rideInfo, searchLatitude, searchLongitude)) {
-                            ridesList.add(rideInfo.toRide())  // Convert RideInfo to Ride
+                        // Range-based comparison
+                        if (isWithinRange(rideInfo, pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude)) {
+                            // Update RideInfo to include human-readable names
+                            rideInfo.start_location = pickupPlace
+                            rideInfo.end_location = destinationPlace
+                            ridesList.add(rideInfo)
                         }
                     }
                 }
+                Log.d("Fetched Rides : ", ridesList.toString())
                 updateRecyclerView(ridesList)
             }
-
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("SearchResults", "Database error: ${error.message}")
@@ -127,42 +93,50 @@ public class ride_resultsonsearch : AppCompatActivity() {
         })
     }
 
-    private fun isExactMatch(
-        ride: RideInfo,
-        searchLatitude: Double,
-        searchLongitude: Double,
-        searchDate: String?,
-        searchTime: String?
-    ): Boolean {
-        return ride.start_latitude == searchLatitude &&
-                ride.start_longitude == searchLongitude &&
-                ride.departure_date == searchDate &&
-                ride.departure_time == searchTime
+    private fun getPlaceName(latitude: Double, longitude: Double): String {
+        val geocoder = Geocoder(this, Locale.getDefault())
+        return try {
+            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+            if (addresses != null && addresses.isNotEmpty()) {
+                addresses[0].getAddressLine(0) // Get full address as a readable place name
+            } else {
+                "Unknown Location"
+            }
+        } catch (e: Exception) {
+            Log.e("Geocoder", "Error fetching address: ${e.message}")
+            "Unknown Location"
+        }
     }
 
-    private fun isNearbyMatch(ride: RideInfo, searchLatitude: Double, searchLongitude: Double): Boolean {
-        val distance = calculateDistance(
-            searchLatitude, searchLongitude,
-            ride.start_latitude, ride.start_longitude
-        )
-        return distance <= 2.0 // Nearby threshold in kilometers
-    }
-
-    private fun calculateDistance(
-        lat1: Double, lon1: Double,
-        lat2: Double, lon2: Double
-    ): Double {
-        val earthRadius = 6371.0 // Radius of the Earth in km
+    // Function to calculate distance between two latitude/longitude points using the Haversine formula
+    private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val R = 6371 // Radius of Earth in km
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
         val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
                 Math.sin(dLon / 2) * Math.sin(dLon / 2)
         val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-        return earthRadius * c
+        return R * c // Distance in km
     }
 
-    private fun updateRecyclerView(ridesList: List<Ride>) {
+    // Function to check if two points are within range (in km)
+    private fun isWithinRange(
+        ride: RideInfo,
+        pickupLatitude: Double,
+        pickupLongitude: Double,
+        destinationLatitude: Double,
+        destinationLongitude: Double,
+        maxDistanceKm: Double = 5.0 // Max distance in km
+    ): Boolean {
+        val pickupDistance = calculateDistance(ride.start_latitude, ride.start_longitude, pickupLatitude, pickupLongitude)
+        val destinationDistance = calculateDistance(ride.end_latitude, ride.end_longitude, destinationLatitude, destinationLongitude)
+
+        // Check if both pickup and destination distances are within the acceptable range
+        return pickupDistance <= maxDistanceKm && destinationDistance <= maxDistanceKm
+    }
+
+    private fun updateRecyclerView(ridesList: List<RideInfo>) {
         if (ridesList.isEmpty()) {
             Toast.makeText(this, "No rides found.", Toast.LENGTH_SHORT).show()
         }

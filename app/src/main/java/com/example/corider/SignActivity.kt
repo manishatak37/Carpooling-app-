@@ -22,6 +22,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.corider.model.User
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class SignActivity : AppCompatActivity() {
 
