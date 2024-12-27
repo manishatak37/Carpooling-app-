@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:openDrawer="start"
     android:id="@+id/drawerLayout"
-    tools:context=".DriverNavigation">
+    tools:context=".Driver.DriverNavigation">
 
     <include
         android:id="@+id/activity_driver_home_page"

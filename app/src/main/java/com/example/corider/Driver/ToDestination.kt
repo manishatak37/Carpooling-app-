@@ -1,4 +1,4 @@
-package com.example.corider // Replace with your actual package name
+package com.example.corider.Driver // Replace with your actual package name
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,8 +8,9 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import com.example.corider.R
 
-class toDestination : AppCompatActivity() { // Class name should start with an uppercase letter
+class ToDestination : AppCompatActivity() { // Class name should start with an uppercase letter
     private lateinit var webView: WebView
     private var endLatitude: Double? = null
     private var endLongitude: Double? = null
@@ -37,7 +38,7 @@ class toDestination : AppCompatActivity() { // Class name should start with an u
     }
 
     // JavaScript Interface class
-    private inner class WebAppInterface(private val activity: toDestination) {
+    private inner class WebAppInterface(private val activity: ToDestination) {
 
         @JavascriptInterface
         fun storeEndLocation(lat: Double, lon: Double) {

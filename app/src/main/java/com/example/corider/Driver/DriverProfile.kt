@@ -1,4 +1,4 @@
-package com.example.corider
+package com.example.corider.Driver
 
 import android.app.Activity
 import android.content.Intent
@@ -16,6 +16,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.corider.R
 import com.google.firebase.database.DataSnapshot
 
 class DriverProfile : AppCompatActivity() {

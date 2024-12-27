@@ -23,7 +23,30 @@
         android:theme="@style/Theme.Corider"
         tools:targetApi="31">
         <activity
-            android:name=".DriverRatingFeedback"
+            android:name=".User.DriverRatingFeedback"
+            android:exported="true" >
+
+        </activity>
+        <activity
+            android:name=".model.ride_resultsonsearch"
+            android:exported="true" />
+        <activity
+            android:name=".Driver.DriverDisplayRide"
+            android:exported="true" />
+        <activity
+            android:name=".model.SearchRideForm"
+            android:exported="true" />
+        <activity
+            android:name=".User.UserNavigation"
+            android:exported="true" />
+        <activity
+            android:name=".User.UserHomePage"
+            android:exported="true" />
+        <activity
+            android:name=".Driver.DriverHomePage"
+            android:exported="true" />
+        <activity
+            android:name=".Driver.DriverNavigation"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,36 +55,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".model.ride_resultsonsearch"
-            android:exported="true" />
-        <activity
-            android:name=".model.SearchRideForm"
-            android:exported="true" />
-        <activity
-            android:name=".UserNavigation"
-            android:exported="true" />
-        <activity
-            android:name=".UserHomePage"
-            android:exported="true" />
-        <activity
-            android:name=".DriverHomePage"
-            android:exported="true" />
-        <activity
-            android:name=".DriverNavigation"
-            android:exported="true" />
-        <activity
             android:name=".model.SearchRideActivity"
             android:exported="true" />
         <activity
-            android:name=".PublishActivity"
+            android:name=".Driver.PublishActivity"
             android:exported="true">
 
         </activity>
         <activity
-            android:name=".DriverInbox"
+            android:name=".Driver.DriverInbox"
             android:exported="false" />
         <activity
-            android:name=".DriverProfile"
+            android:name=".Driver.DriverProfile"
             android:exported="false" />
         <activity
             android:name=".model.RideResultsActivity"
@@ -73,19 +78,19 @@
             android:name=".RegisteredUsersActivity"
             android:exported="false" />
         <activity
-            android:name=".Admin_home_page"
+            android:name=".Admin.Admin_home_page"
             android:exported="true" />
         <activity
-            android:name=".PublishSucess"
+            android:name=".Driver.PublishSucess"
             android:exported="true" />
         <activity
-            android:name=".RidePublishForm2"
+            android:name=".Driver.RidePublishForm2"
             android:exported="true" />
         <activity
-            android:name=".toDestination"
+            android:name=".Driver.ToDestination"
             android:exported="true" />
         <activity
-            android:name=".RidePublishForm"
+            android:name=".Driver.RidePublishForm"
             android:exported="true" />
         <activity
             android:name=".SignActivity"

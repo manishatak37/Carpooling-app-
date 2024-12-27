@@ -5,7 +5,7 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="#F5F5F5"
-    tools:context=".DriverProfile"
+    tools:context=".Driver.DriverProfile"
 android:padding="16dp">
 
 <LinearLayout

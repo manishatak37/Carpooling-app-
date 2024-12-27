@@ -1,7 +1,8 @@
-package com.example.corider
+package com.example.corider.Driver
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.corider.R
 
 class DriverDisplayRide : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

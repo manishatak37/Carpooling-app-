@@ -1,4 +1,4 @@
-package com.example.corider // Replace with your actual package name
+package com.example.corider.Driver // Replace with your actual package name
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import com.example.corider.R
 
 class PublishActivity : AppCompatActivity() {
     private lateinit var webView: WebView
@@ -45,7 +46,7 @@ class PublishActivity : AppCompatActivity() {
 
         @JavascriptInterface
         fun goToNextActivity() {
-            val intent = Intent(activity, toDestination::class.java) // Ensure this is your actual destination Activity
+            val intent = Intent(activity, ToDestination::class.java) // Ensure this is your actual destination Activity
             activity.startActivity(intent)
         }
     }

@@ -1,13 +1,11 @@
-package com.example.corider
+package com.example.corider.Driver
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.corider.R
 import com.example.corider.adapter.NotificationAdapter
 import com.example.corider.model.Notification
 import com.google.firebase.database.*

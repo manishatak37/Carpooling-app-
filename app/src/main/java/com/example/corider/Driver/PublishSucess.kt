@@ -1,4 +1,4 @@
-package com.example.corider // Replace with your actual package name
+package com.example.corider.Driver // Replace with your actual package name
 
 
 import android.content.Intent
@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.corider.MainActivity
+import com.example.corider.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 
@@ -46,7 +48,7 @@ class PublishSucess : AppCompatActivity() {
 
         continueButton.setOnClickListener {
             // Redirect to the main activity or any other page
-            val intent = Intent(this, MainActivity::class.java) // Replace with your main activity
+            val intent = Intent(this, DriverNavigation::class.java) // Replace with your main activity
             startActivity(intent)
             finish() // Close the success page
         }
@@ -57,8 +59,8 @@ class PublishSucess : AppCompatActivity() {
 
 
         // Retrieve the user_id from SharedPreferences
-       // val userId = 1 // Assuming this is a constant or retrieved differently
-        val userId = auth.currentUser?.uid.toString()
+        val userId = 1 // Assuming this is a constant or retrieved differently
+//        val userId = auth.currentUser?.uid.toString()
 
         // Get the rest of the ride details from SharedPreferences
         val startLatitude = sharedPreferences.getFloat("start_latitude", -1f).toDouble()

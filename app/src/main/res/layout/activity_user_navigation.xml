@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:openDrawer="start"
     android:id="@+id/drawerLayout"
-    tools:context=".UserNavigation">
+    tools:context=".User.UserNavigation">
 
     <include
         android:id="@+id/activity_user_home_page"

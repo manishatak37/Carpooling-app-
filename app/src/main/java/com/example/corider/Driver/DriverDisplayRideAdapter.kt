@@ -1,4 +1,4 @@
-package com.example.corider
+package com.example.corider.Driver
 
 class DriverDisplayRideAdapter {
 }
