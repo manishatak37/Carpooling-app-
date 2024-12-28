@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import com.example.corider.Driver.PublishActivity
 import com.example.corider.R
 
 class PublishFragment : Fragment() {
@@ -22,7 +23,7 @@ class PublishFragment : Fragment() {
         val button = view.findViewById<Button>(R.id.button_publish)
         button.setOnClickListener {
             // Start PublishActivity when button is clicked
-            val intent = Intent(activity, com.example.corider.PublishActivity::class.java)
+            val intent = Intent(activity, PublishActivity::class.java)
             startActivity(intent)
         }
 

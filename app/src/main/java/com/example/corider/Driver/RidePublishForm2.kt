@@ -1,4 +1,4 @@
-package com.example.corider // Change this to your actual package name
+package com.example.corider.Driver // Change this to your actual package name
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
+import com.example.corider.R
 
 class RidePublishForm2 : AppCompatActivity() {
 

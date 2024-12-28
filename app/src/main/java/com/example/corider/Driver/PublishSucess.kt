@@ -46,7 +46,7 @@ class PublishSucess : AppCompatActivity() {
 
         continueButton.setOnClickListener {
             // Redirect to the main activity or any other page
-            val intent = Intent(this, MainActivity::class.java) // Replace with your main activity
+            val intent = Intent(this, DriverNavigation::class.java) // Replace with your main activity
             startActivity(intent)
             finish() // Close the success page
         }

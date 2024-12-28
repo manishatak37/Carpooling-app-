@@ -1,4 +1,4 @@
-package com.example.corider
+package com.example.corider.User
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,9 +7,14 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.corider.Driver.DriverInbox
+import com.example.corider.Driver.DriverProfile
+import com.example.corider.Driver.PublishActivity
+import com.example.corider.R
+import com.example.corider.model.SearchRideActivity
 import com.google.android.material.navigation.NavigationView
 
-class DriverNavigation : AppCompatActivity() {
+class UserNavigation : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var buttonDrawerToggle: ImageButton
@@ -17,14 +22,14 @@ class DriverNavigation : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_driver_navigation)
+        setContentView(R.layout.activity_user_navigation)
 
         // Initialize DrawerLayout and NavigationView
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
 
         // Access the included layout using the id
-        val includedLayout = findViewById<LinearLayout>(R.id.activity_driver_home_page)
+        val includedLayout = findViewById<LinearLayout>(R.id.activity_user_home_page)
 
         // Find the ImageButton within the included layout
         buttonDrawerToggle = includedLayout.findViewById(R.id.buttondrawerToggle)
@@ -42,9 +47,9 @@ class DriverNavigation : AppCompatActivity() {
 
             // Handle navigation item clicks
             when (id) {
-                R.id.PublishRide -> {
+                R.id.BookRide -> {
                     // Example: Redirect to another activity
-                    val intent = Intent(this, PublishActivity::class.java)
+                    val intent = Intent(this, SearchRideActivity::class.java)
                     startActivity(intent)
                 }
                 R.id.ViewRides -> {

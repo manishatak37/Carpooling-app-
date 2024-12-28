@@ -1,11 +1,12 @@
-package com.example.corider
+package com.example.corider.Driver
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.corider.R
 
-class UserHomePage : AppCompatActivity() {
+class DriverHomePage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_home_page)
+        setContentView(R.layout.activity_driver_home_page)
     }
 }

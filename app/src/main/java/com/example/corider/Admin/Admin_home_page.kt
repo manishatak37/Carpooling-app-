@@ -1,12 +1,13 @@
-package com.example.corider
+package com.example.corider.Admin
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.corider.R
+import com.example.corider.RegisteredUsersActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.example.corider.model.RideInfo
 import com.example.corider.model.TransactionInfo
 
 class Admin_home_page : AppCompatActivity() {
