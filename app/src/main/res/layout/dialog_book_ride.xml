@@ -23,6 +23,17 @@
             android:inputType="number" />
 
 
+        <TextView
+            android:id="@+id/tvTotalPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total Price: $0"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"/>
+
         <ProgressBar
             android:id="@+id/loadingSpinner"
             android:layout_width="238dp"

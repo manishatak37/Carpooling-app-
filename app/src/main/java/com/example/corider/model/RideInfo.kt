@@ -38,7 +38,7 @@ package com.example.corider.model
 import java.io.Serializable
 
 data class RideInfo(
-    var ride_id: Int = 0,
+    var ride_id: String?= "",
     var user_id: String ="",
     var start_latitude: Double = 0.0,
     var start_longitude: Double = 0.0,

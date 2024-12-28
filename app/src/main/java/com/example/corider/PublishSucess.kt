@@ -57,7 +57,7 @@ class PublishSucess : AppCompatActivity() {
 
 
         // Retrieve the user_id from SharedPreferences
-       // val userId = 1 // Assuming this is a constant or retrieved differently
+        // val userId = 1 // Assuming this is a constant or retrieved differently
         val userId = auth.currentUser?.uid.toString()
 
         // Get the rest of the ride details from SharedPreferences
@@ -81,7 +81,7 @@ class PublishSucess : AppCompatActivity() {
 
         // Return the new RideInfo object with the generated ride_id
         return RideInfo(
-            ride_id = newRideId, // Convert to string to match the RideInfo model
+            ride_id = "", // Convert to string to match the RideInfo model
             user_id = userId,
             start_latitude = startLatitude,
             start_longitude = startLongitude,
@@ -100,6 +100,7 @@ class PublishSucess : AppCompatActivity() {
         // Generate a new key under the "RideInfo" node
         val newRideKey = database.child("RideInfo").push().key
 
+        ride.ride_id = newRideKey
         // Ensure the key is not null
         if (newRideKey != null) {
             // Set the ride data under the new key

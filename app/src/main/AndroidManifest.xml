@@ -53,13 +53,20 @@
         <activity
             android:name=".DriverNavigation"
             android:exported="true"/>
+
+
+
+
+        <activity
+            android:name=".model.RideResultsActivity"
+            android:exported="true" />
+
         <activity android:name=".model.SearchRideActivity"
             android:exported="true"/>
 
         <activity
             android:name=".PublishActivity"
-            android:exported="true" >
-
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -82,9 +89,7 @@
 
 
 
-        <activity
-            android:name=".model.RideResultsActivity"
-            android:exported="true" />
+
 
 
 
