@@ -1,4 +1,4 @@
-package com.example.corider.model
+package com.example.corider.User
 
 import RideAdapter
 import android.os.Bundle
@@ -66,7 +66,9 @@ class ride_resultsonsearch : AppCompatActivity() {
                 for (rideSnapshot in snapshot.children) {
                     val rideInfo = rideSnapshot.getValue(RideInfo::class.java)
                     if (rideInfo != null) {
-                        // Fetch human-readable place names
+                        if (rideInfo.available_seats > 0) {
+
+                            // Fetch human-readable place names
                         val pickupPlace = getPlaceName(rideInfo.start_latitude, rideInfo.start_longitude)
                         val destinationPlace = getPlaceName(rideInfo.end_latitude, rideInfo.end_longitude)
 
@@ -81,7 +83,7 @@ class ride_resultsonsearch : AppCompatActivity() {
                             ridesList.add(rideInfo)
                         }
                     }
-                }
+                }}
                 Log.d("Fetched Rides : ", ridesList.toString())
                 updateRecyclerView(ridesList)
             }

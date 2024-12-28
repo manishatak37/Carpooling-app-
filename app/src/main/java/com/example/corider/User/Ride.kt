@@ -1,4 +1,4 @@
-package com.example.corider.model
+package com.example.corider.User
 
 data class Ride(
     val driverName: String, // You can change this if needed based on your data structure

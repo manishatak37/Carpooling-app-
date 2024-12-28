@@ -33,7 +33,7 @@ data class RideInfo(
 )
 
  */
-package com.example.corider.model
+package com.example.corider.User
 
 import java.io.Serializable
 

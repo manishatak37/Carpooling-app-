@@ -12,7 +12,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 
 import android.widget.Toast
-import com.example.corider.model.RideInfo
+import com.example.corider.User.RideInfo
 
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
@@ -112,43 +112,48 @@ class RideAdapter(
         }
 
         btnConfirmBooking.setOnClickListener {
+            // Retrieve seat count entered by user
             val seatsToBook = edtSeats.text.toString().toIntOrNull()
 
+            // Validate the seat input
             if (seatsToBook == null || seatsToBook <= 0) {
-                Toast.makeText(context, "Please enter a valid number of seats", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                // Check for available seats before proceeding with booking
-                loadingSpinner.visibility = View.VISIBLE
-                val rideId = ride.ride_id.toString()
+                Toast.makeText(context, "Please enter a valid number of seats", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-                Log.d("RideInfo",ride.toString())
-                // Directly access the ride using ride_id as the key
-                val rideRef = database.child("RideInfo").child(rideId)
+            // Show loading spinner while processing the booking
+            loadingSpinner.visibility = View.VISIBLE
+            val rideId = ride.ride_id.toString()
 
-                rideRef.get().addOnSuccessListener { snapshot ->
-                    if (snapshot.exists()) {
-                        // Extract availableSeats directly from the ride
-                        val availableSeats = snapshot.child("available_seats").getValue(Int::class.java)
+            Log.d("RideInfo", ride.toString())
+            // Directly access the ride using ride_id as the key in the database
+            val rideRef = database.child("RideInfo").child(rideId)
 
-                        if (availableSeats != null && availableSeats >= seatsToBook) {
-                            // Proceed with booking
-                            val bookingDetails = BookingDetails(
-                                rideId = ride.ride_id,
-                                userId = ride.user_id,
-                                seatsToBook = seatsToBook,
-                                bookingTime = System.currentTimeMillis()
-                            )
+            rideRef.get().addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    // Extract availableSeats directly from the ride
+                    val availableSeats = snapshot.child("available_seats").getValue(Int::class.java)
 
-                            // Use a transaction to safely update available seats
-                            rideRef.child("available_seats").runTransaction(object : Transaction.Handler {
+                    if (availableSeats != null && availableSeats >= seatsToBook) {
+                        // Proceed with booking if there are enough seats
+                        val bookingDetails = BookingDetails(
+                            rideId = ride.ride_id,
+                            userId = ride.user_id,
+                            seatsToBook = seatsToBook,
+                            bookingTime = System.currentTimeMillis()
+                        )
+
+                        // Perform a Firebase transaction to safely update available seats
+                        rideRef.child("available_seats")
+                            .runTransaction(object : Transaction.Handler {
                                 override fun doTransaction(currentData: MutableData): Transaction.Result {
                                     val currentSeats = currentData.getValue(Int::class.java) ?: return Transaction.abort()
                                     return if (currentSeats >= seatsToBook) {
                                         currentData.value = currentSeats - seatsToBook
                                         Transaction.success(currentData)
                                     } else {
-                                        Transaction.abort()
+                                        // Abort transaction if not enough seats are available
+                                        return Transaction.abort()
                                     }
                                 }
 
@@ -157,88 +162,47 @@ class RideAdapter(
                                     committed: Boolean,
                                     currentData: DataSnapshot?
                                 ) {
+                                    loadingSpinner.visibility = View.GONE
                                     if (committed) {
-                                        // Store booking details
-                                        database.child("bookings").push().setValue(bookingDetails)
+                                        // Transaction committed: Store booking details in Firebase
+                                        database.child("bookings").push()
+                                            .setValue(bookingDetails)
                                             .addOnSuccessListener {
-                                                loadingSpinner.visibility = View.GONE
+                                                // Successfully booked the seats
                                                 Toast.makeText(context, "Booking successful!", Toast.LENGTH_LONG).show()
                                                 dialog.dismiss()
                                             }
                                             .addOnFailureListener {
-                                                loadingSpinner.visibility = View.GONE
+                                                // Failed to store booking details
                                                 Toast.makeText(context, "Booking failed. Please try again later.", Toast.LENGTH_LONG).show()
                                             }
                                     } else {
-                                        loadingSpinner.visibility = View.GONE
+                                        // Transaction failed due to insufficient seats
                                         Toast.makeText(context, "Not enough seats available. Try reducing the number of seats.", Toast.LENGTH_LONG).show()
                                     }
                                 }
                             })
-                        } else {
-                            loadingSpinner.visibility = View.GONE
-                            Toast.makeText(context, "Not enough seats available. Try reducing the number of seats.", Toast.LENGTH_LONG).show()
-                        }
                     } else {
+                        // Not enough seats available
                         loadingSpinner.visibility = View.GONE
-                        Toast.makeText(context, "Ride not found.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Not enough seats available. Try again.", Toast.LENGTH_LONG).show()
                     }
-                }.addOnFailureListener {
+                } else {
+                    // Ride not found in the database
                     loadingSpinner.visibility = View.GONE
-                    Toast.makeText(context, "Failed to check seat availability. Please try again later.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Ride not found.", Toast.LENGTH_LONG).show()
                 }
+            }.addOnFailureListener {
+                // Failed to check seat availability from Firebase
+                loadingSpinner.visibility = View.GONE
+                Toast.makeText(context, "Failed to check seat availability. Please try again later.", Toast.LENGTH_LONG).show()
             }
-            // Reference to ride's available seats (could be added to your RideInfo data model)
-//                val availableSeatsRef =
-//                    database.child("RideInfo").orderByChild("ride_id").equalTo(ride.ride_id.toString())
-//                availableSeatsRef.get().addOnSuccessListener { snapshot ->
-//                    val availableSeats = snapshot.getValue(Int::class.java) ?: 0
-//                    if (availableSeats >= seatsToBook) {
-//                        // If enough seats are available, proceed withthe booking
-//                        val bookingDetails = BookingDetails(
-//                            rideId = ride.ride_id,
-//                            userId = ride.user_id,
-//                            seatsToBook = seatsToBook,
-//                            bookingTime = System.currentTimeMillis()
-//                        )
-//
-//                        // Update available seats
-//                        availableSeatsRef.setValue(availableSeats - seatsToBook)
-//
-//                        // Store booking details
-//                        database.child("bookings").push().setValue(bookingDetails)
-//                            .addOnSuccessListener {
-//                                loadingSpinner.visibility = View.GONE
-//                                Toast.makeText(context, "Booking successful!", Toast.LENGTH_LONG)
-//                                    .show()
-//                                dialog.dismiss()
-//                            }
-//                            .addOnFailureListener {
-//                                loadingSpinner.visibility = View.GONE
-//                                Toast.makeText(
-//                                    context,
-//                                    "Booking failed. Please try again later.",
-//                                    Toast.LENGTH_LONG
-//                                ).show()
-//                            }
-//                    } else {
-//                        loadingSpinner.visibility = View.GONE
-//                        Toast.makeText(
-//                            context,
-//                            "Not enough seats available. Try reducing the number of seats.",
-//                            Toast.LENGTH_LONG
-//                        ).show()
-//                    }
-//                }.addOnFailureListener {
-//                    loadingSpinner.visibility = View.GONE
-//                    Toast.makeText(
-//                        context,
-//                        "Failed to check seat availability. Please try again later.",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                }
-
         }
+
+// Show the dialog to proceed with booking
+        //dialog.show()
+
+
 
         dialog.show()
     }

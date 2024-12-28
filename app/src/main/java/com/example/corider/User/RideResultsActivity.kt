@@ -1,4 +1,4 @@
-package com.example.corider.model
+package com.example.corider.User
 
 import android.content.Intent
 import android.os.Bundle

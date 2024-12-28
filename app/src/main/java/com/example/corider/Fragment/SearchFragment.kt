@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.example.corider.R
-import com.example.corider.model.SearchRideActivity
+import com.example.corider.User.SearchRideActivity
 
 class SearchFragment : Fragment() {
 

@@ -1,4 +1,4 @@
-package com.example.corider.model
+package com.example.corider.User
 
 data class BookingDetails(
     val rideId: Int = 0,         // Default values for Firebase compatibility

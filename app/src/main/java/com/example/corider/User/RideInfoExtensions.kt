@@ -1,5 +1,5 @@
 
-package com.example.corider.model
+package com.example.corider.User
 
 fun RideInfo.toRide(): Ride {
     return Ride(

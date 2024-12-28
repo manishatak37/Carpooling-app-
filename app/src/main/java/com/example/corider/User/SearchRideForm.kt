@@ -1,4 +1,4 @@
-package com.example.corider.model
+package com.example.corider.User
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

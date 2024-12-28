@@ -28,17 +28,15 @@
 
         </activity>
         <activity
-            android:name=".model.ride_resultsonsearch"
+            android:name=".User.ride_resultsonsearch"
             android:exported="true" />
         <activity
             android:name=".Driver.DriverDisplayRide"
             android:exported="true" />
         <activity
-            android:name=".model.SearchRideForm"
+            android:name=".User.SearchRideForm"
             android:exported="true" />
-        <activity
-            android:name=".User.UserNavigation"
-            android:exported="true" />
+
         <activity
             android:name=".User.UserHomePage"
             android:exported="true" />
@@ -47,7 +45,10 @@
             android:exported="true" />
         <activity
             android:name=".Driver.DriverNavigation"
-            android:exported="true" >
+            android:exported="true" />
+        <activity
+            android:name=".User.UserNavigation"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,7 +56,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".model.SearchRideActivity"
+            android:name=".User.SearchRideActivity"
             android:exported="true" />
         <activity
             android:name=".Driver.PublishActivity"
@@ -69,7 +70,7 @@
             android:name=".Driver.DriverProfile"
             android:exported="false" />
         <activity
-            android:name=".model.RideResultsActivity"
+            android:name=".User.RideResultsActivity"
             android:exported="true" />
         <activity
             android:name=".Publishmap1"
@@ -81,7 +82,7 @@
             android:name=".Admin.Admin_home_page"
             android:exported="true" />
         <activity
-            android:name=".Driver.PublishSucess"
+            android:name=".PublishSucess"
             android:exported="true" />
         <activity
             android:name=".Driver.RidePublishForm2"

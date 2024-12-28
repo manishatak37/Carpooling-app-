@@ -11,7 +11,6 @@ import com.example.corider.Driver.DriverInbox
 import com.example.corider.Driver.DriverProfile
 import com.example.corider.Driver.PublishActivity
 import com.example.corider.R
-import com.example.corider.model.SearchRideActivity
 import com.google.android.material.navigation.NavigationView
 
 class UserNavigation : AppCompatActivity() {
