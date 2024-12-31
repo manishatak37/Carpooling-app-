@@ -1,29 +1,36 @@
 package com.example.corider.Fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.corider.Driver.DriverDisplayRideAdapter
 import com.example.corider.R
+import com.example.corider.User.UserDisplayRideAdapter
 import com.google.firebase.database.*
 
-
+data class Booking(
+    val userId: String = "", // Default values to ensure Firebase can map them correctly
+    val rideId: String = ""
+    // Add any other fields you need
+)
 
 class UserCompletedFragment : Fragment(R.layout.activity_user_completed_fragment) {
 
     private lateinit var database: DatabaseReference
     private val rideInfoList = ArrayList<RideInfo>()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: DriverDisplayRideAdapter
+    private lateinit var adapter: UserDisplayRideAdapter
+
+    private val userId = "zntFzJmA1QTeaEc6EBVcSpRUhed2" // Replace with the actual user ID logic
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView(view)
 
         initializeDatabase()
-        fetchCancelledRides()
+        fetchCompletedRides(userId)
     }
 
     // Setup RecyclerView with layout manager and adapter
@@ -31,37 +38,64 @@ class UserCompletedFragment : Fragment(R.layout.activity_user_completed_fragment
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
-        adapter = DriverDisplayRideAdapter(rideInfoList)
+        adapter = UserDisplayRideAdapter(rideInfoList)
         recyclerView.adapter = adapter
     }
 
     // Initialize Firebase Database reference
     private fun initializeDatabase() {
-        database = FirebaseDatabase.getInstance().getReference("RideInfo")
+        database = FirebaseDatabase.getInstance().reference
     }
 
-    // Fetch cancelled rides from Firebase and update RecyclerView
-    // Fetch rides with "scheduled" status and driver_id = "1" from Firebase and update RecyclerView
-    private fun fetchCancelledRides() {
-        database.orderByChild("driver_id").equalTo("zntFzJmA1QTeaEc6EBVcSpRUhed2") // Filter by driver_id = "1"
-            .addValueEventListener(object : ValueEventListener {
+    // Fetch completed/cancelled rides using user ID, then fetch ride details
+    private fun fetchCompletedRides(userId: String) {
+        // Query the Booking table to get ride IDs associated with the user
+        val bookingRef = database.child("bookings").orderByChild("userId").equalTo(userId)
+
+        bookingRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val rideIds = mutableListOf<String>()
+                for (data in snapshot.children) {
+                    val booking = data.getValue(Booking::class.java)
+                    booking?.rideId?.let { rideIds.add(it) } // Collect ride IDs
+                }
+
+                // Print the rideIds for debugging
+                Log.d("UserCompletedFragment", "Fetched Ride IDs: $rideIds")
+
+                if (rideIds.isNotEmpty()) {
+                    // After fetching ride IDs, query the RideInfo table to get the ride details
+                    fetchRideDetails(rideIds)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                error.toException().printStackTrace() // Handle the error
+            }
+        })
+    }
+
+
+    // Fetch ride details from RideInfo table based on the ride IDs
+    private fun fetchRideDetails(rideIds: List<String>) {
+        val rideInfoRef = database.child("RideInfo")
+        rideInfoList.clear() // Clear the list before adding new data
+
+        // Set up a single listener to fetch data for all rides
+        rideIds.forEach { rideId ->
+            rideInfoRef.child(rideId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    rideInfoList.clear() // Avoid duplicates
-                    for (data in snapshot.children) {
-                        val ride = data.getValue(RideInfo::class.java)
-                        if (ride != null && ride.ride_status == "cancelled") {
-                            // Add to the list if ride_status is "scheduled"
-                            rideInfoList.add(ride)
-                        }
+                    val ride = snapshot.getValue(RideInfo::class.java)
+                    if (ride != null && ride.ride_status == "completed") { // Check if the ride is completed
+                        rideInfoList.add(ride) // Add ride details to the list
                     }
-                    adapter.notifyDataSetChanged() // Refresh UI
+                    adapter.notifyDataSetChanged() // Refresh UI after adding data
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    // Log or handle database error
-                    error.toException().printStackTrace()
+                    error.toException().printStackTrace() // Handle the error
                 }
             })
+        }
     }
-
 }

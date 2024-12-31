@@ -33,7 +33,13 @@
             android:exported="false" />
         <activity
             android:name=".User.UserDisplayRide"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".User.DriverRatingFeedback"
             android:exported="true" />
@@ -43,11 +49,7 @@
         <activity
             android:name=".Driver.DriverDisplayRide"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".User.SearchRideForm"
@@ -63,7 +65,9 @@
             android:exported="true" />
         <activity
             android:name=".User.UserNavigation"
-            android:exported="true" />
+            android:exported="true" >
+
+        </activity>
         <activity
             android:name=".User.SearchRideActivity"
             android:exported="true" />
