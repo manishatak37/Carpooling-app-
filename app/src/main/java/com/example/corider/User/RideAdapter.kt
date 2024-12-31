@@ -75,7 +75,7 @@ class RideAdapter(
 
     override fun onBindViewHolder(holder: RideViewHolder, position: Int) {
         val ride = rideList[position]
-        holder.rideTitle.text = "Driver: ${ride.user_id}"
+        holder.rideTitle.text = "Driver: ${ride.driver_id}"
         holder.rideDetails.text = "Pickup: ${ride.start_location}"
         holder.rideDetailDrop.text = "Drop-off: ${ride.end_location}"
         holder.carModel.text = "Car Model: ${ride.car_model}"
@@ -138,7 +138,7 @@ class RideAdapter(
                         // Proceed with booking if there are enough seats
                         val bookingDetails = BookingDetails(
                             rideId = ride.ride_id,
-                            userId = ride.user_id,
+                            userId = ride.driver_id,
                             seatsToBook = seatsToBook,
                             bookingTime = System.currentTimeMillis()
                         )
@@ -147,9 +147,10 @@ class RideAdapter(
                         rideRef.child("available_seats")
                             .runTransaction(object : Transaction.Handler {
                                 override fun doTransaction(currentData: MutableData): Transaction.Result {
-                                    val currentSeats = currentData.getValue(Int::class.java) ?: return Transaction.abort()
+                                    val currentSeats = currentData.getValue(Int::class.java) ?: return Transaction.success(currentData) //here made the change
                                     return if (currentSeats >= seatsToBook) {
                                         currentData.value = currentSeats - seatsToBook
+//
                                         Transaction.success(currentData)
                                     } else {
                                         // Abort transaction if not enough seats are available

@@ -10,16 +10,8 @@ import com.example.corider.R
 import com.google.firebase.database.*
 
 
-data class RideInfo(
-    val start_location: String = "",
-    val end_location: String = "",
-    val departure_date: String = "",
-    val departure_time: String = "",
-    val price_per_seat: Int = 0,
-    val ride_status: String = "" // Added ride_status field
-)
 
-class DriverCompletedFragment : Fragment(R.layout.activity_driver_completed_fragment) {
+class UserScheduledFragment : Fragment(R.layout.activity_user_scheduled_fragment) {
 
     private lateinit var database: DatabaseReference
     private val rideInfoList = ArrayList<RideInfo>()
@@ -57,7 +49,7 @@ class DriverCompletedFragment : Fragment(R.layout.activity_driver_completed_frag
                     rideInfoList.clear() // Avoid duplicates
                     for (data in snapshot.children) {
                         val ride = data.getValue(RideInfo::class.java)
-                        if (ride != null && ride.ride_status == "completed") {
+                        if (ride != null && ride.ride_status == "cancelled") {
                             // Add to the list if ride_status is "scheduled"
                             rideInfoList.add(ride)
                         }

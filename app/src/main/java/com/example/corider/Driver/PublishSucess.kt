@@ -2,6 +2,7 @@ package com.example.corider // Replace with your actual package name
 
 
 import android.content.Intent
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -14,6 +15,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.example.corider.User.RideInfo
+import android.location.Address
 
 class PublishSucess : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -83,7 +85,7 @@ class PublishSucess : AppCompatActivity() {
         // Return the new RideInfo object with the generated ride_id
         return RideInfo(
             ride_id = "", // Convert to string to match the RideInfo model
-            user_id = userId,
+            driver_id = userId,
             start_latitude = startLatitude,
             start_longitude = startLongitude,
             end_latitude = endLatitude,
@@ -98,25 +100,41 @@ class PublishSucess : AppCompatActivity() {
     }
 
     private fun saveRideToDatabase(ride: RideInfo) {
+        // Convert latitude and longitude to addresses
+        ride.start_location = getAddressFromCoordinates(ride.start_latitude, ride.start_longitude)
+        ride.end_location = getAddressFromCoordinates(ride.end_latitude, ride.end_longitude)
+
         // Generate a new key under the "RideInfo" node
         val newRideKey = database.child("RideInfo").push().key
-
         ride.ride_id = newRideKey
+
         // Ensure the key is not null
         if (newRideKey != null) {
             // Set the ride data under the new key
             database.child("RideInfo").child(newRideKey).setValue(ride)
                 .addOnSuccessListener {
-                    // Successfully saved the ride
                     Log.d("Database", "Ride data saved successfully")
                 }
                 .addOnFailureListener {
-                    // Handle failure to save ride data
                     Log.e("Database", "Failed to save ride data", it)
                 }
         } else {
             Log.e("Database", "Failed to generate a new ride key")
         }
     }
+
+    private fun getAddressFromCoordinates(latitude: Double, longitude: Double): String {
+        val geocoder = Geocoder(this)
+        return try {
+            val addressList: List<Address>? = geocoder.getFromLocation(latitude, longitude, 1)
+            // If addressList is not null and contains at least one address
+            addressList?.firstOrNull()?.getAddressLine(0) ?: "Unknown Location"
+        } catch (e: Exception) {
+            Log.e("Geocoder", "Error fetching location address: ${e.message}")
+            "Unknown Location"
+        }
+    }
+
+
 
 }
