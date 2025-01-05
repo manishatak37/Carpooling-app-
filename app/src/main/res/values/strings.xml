@@ -24,5 +24,6 @@
     </string-array>
 
     <string name="default_web_client_id">default_web_client_id373802194568-h6d3n2qr47f9g9temrg6i2mr0mvmd6er.apps.googleusercontent.com"></string>
+    <string name="razropay_api_key">rzp_test_zlc00NHaPvALUj</string>
 
 </resources>

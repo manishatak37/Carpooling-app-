@@ -9,8 +9,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -23,6 +21,13 @@
         android:theme="@style/Theme.Corider"
         tools:targetApi="31">
         <activity
+            android:name=".LoginSelectionActivity"
+            android:exported="false" />
+        <!-- Razorpay Payment Activity -->
+        <activity
+            android:name=".Payment.RazorpayPayment"
+            android:exported="true"></activity>
+        <activity
             android:name=".Fragment.UserCancelledFragment"
             android:exported="false" />
         <activity
@@ -33,13 +38,7 @@
             android:exported="false" />
         <activity
             android:name=".User.UserDisplayRide"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".User.DriverRatingFeedback"
             android:exported="true" />
@@ -48,9 +47,7 @@
             android:exported="true" />
         <activity
             android:name=".Driver.DriverDisplayRide"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".User.SearchRideForm"
             android:exported="true" />
@@ -65,9 +62,7 @@
             android:exported="true" />
         <activity
             android:name=".User.UserNavigation"
-            android:exported="true" >
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".User.SearchRideActivity"
             android:exported="true" />
@@ -109,7 +104,13 @@
             android:exported="true" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".StartActivity"
             android:exported="false" />
@@ -119,10 +120,20 @@
         <activity
             android:name=".Splash_Screen"
             android:exported="false" />
+        <activity
+            android:name="com.razorpay.CheckoutActivity"
+            android:exported="true" />
+
+        <receiver
+            android:name="com.razorpay.RzpTokenReceiver"
+            android:exported="true" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="YOUR_API_KEY_HERE" />
+        <meta-data
+            android:name="razorpay.api_key"
+            android:value="@string/razropay_api_key" />
     </application>
 
 </manifest>

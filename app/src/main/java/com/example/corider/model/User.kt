@@ -5,5 +5,5 @@ data class User(
     val userName: String,
     val email: String,
     val userPassword: String,
-    val creationDate: Long
+    val creationDate: String
 )

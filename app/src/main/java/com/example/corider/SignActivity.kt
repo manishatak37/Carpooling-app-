@@ -1,12 +1,17 @@
 package com.example.corider
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.corider.LoginSelectionActivity
+import com.example.corider.R
 import com.example.corider.databinding.ActivitySignBinding
-import com.example.corider.model.UserModel
+import com.example.corider.model.User
+import com.example.corider.model.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -19,9 +24,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.GoogleAuthProvider
-import android.content.Context
-import android.content.SharedPreferences
-import com.example.corider.model.User
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -60,7 +62,7 @@ class SignActivity : AppCompatActivity() {
         val googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         binding.donthavebutton.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, SignActivity::class.java)
             startActivity(intent)
         }
 
@@ -121,7 +123,7 @@ class SignActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, userPassword).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Toast.makeText(this, "Account created Successfully!", Toast.LENGTH_SHORT).show()
-                saveUserData(this)
+                saveUserDataToUserTable(this, userName, email, userPassword)
 
                 // Set the display name for the user in Firebase
                 auth.currentUser?.let { user ->
@@ -137,7 +139,7 @@ class SignActivity : AppCompatActivity() {
                 }
 
                 // Redirect to login
-                val intent = Intent(this, LoginActivity::class.java)
+                val intent = Intent(this, SignActivity::class.java)
                 startActivity(intent)
                 finish()
             } else {
@@ -147,13 +149,8 @@ class SignActivity : AppCompatActivity() {
         }
     }
 
-    // Function to save user data to Firebase Database
-
-    private fun saveUserData(context: Context) {
-        val userName = binding.userName.text.toString().trim()
-        val email = binding.loginemail.text.toString().trim()
-        val userPassword = binding.password.text.toString().trim() // Assuming there's a field for password
-
+    // Function to save user data to Firebase Database (User table)
+    private fun saveUserDataToUserTable(context: Context, userName: String, email: String, userPassword: String) {
         // Initialize SharedPreferences
         val sharedPrefs: SharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val editor: SharedPreferences.Editor = sharedPrefs.edit()
@@ -164,26 +161,65 @@ class SignActivity : AppCompatActivity() {
 
         // Ensure currentUser is not null before using it
         auth.currentUser?.let { user ->
-            val creationDate: Long = System.currentTimeMillis()
+            val currentDate = getCurrentDate()  // Get current date in the desired format
 
-            val userModel = User(newUserId.toString(), userName, email, userPassword, creationDate)
+            // Create the user model for saving the user data in the 'user' table
+            val userModel = User(newUserId.toString(), userName, email, userPassword, currentDate)
 
             // Get a unique key for the new user entry
             val newUserKey = database.child("user").push().key
 
             newUserKey?.let { key ->
+                // Save user data to the 'user' table in Firebase Realtime Database
                 database.child("user").child(key).setValue(userModel)
                     .addOnSuccessListener {
                         Log.d("Database", "User data saved successfully")
+
                         // Save the new user ID back to SharedPreferences
                         editor.putInt("last_user_id", newUserId)
                         editor.apply()
+
+                        // Save user profile data
+//                        saveUserProfileToUserProfileTable(newUserId.toString(), userName)
                     }
                     .addOnFailureListener {
                         Log.d("Database", "Failed to save user data", it)
                     }
             } ?: Log.d("Database", "Failed to generate unique key for user")
         }
+    }
+
+    // Function to save user profile data to Firebase Database (UserProfile table)
+    private fun saveUserProfileToUserProfileTable(userId: String, userName: String) {
+        val userProfile = UserProfile(
+            userId = userId,  // Use the newly created userId
+            name = userName,
+            about = "",  // Default value
+            vehicleModel = "",  // Default value
+            vehicleNumber = "",  // Default value
+            seats = 0,  // Default value
+            travelPreferences = null  // Default value
+        )
+
+        // Get a unique key for the new user profile entry
+        val newUserProfileKey = database.child("userProfile").push().key
+
+        newUserProfileKey?.let { profileKey ->
+            // Save user profile data to the 'userProfile' table in Firebase
+            database.child("userProfile").child(profileKey).setValue(userProfile)
+                .addOnSuccessListener {
+                    Log.d("Database", "User profile saved successfully")
+                }
+                .addOnFailureListener {
+                    Log.d("Database", "Failed to save user profile", it)
+                }
+        }
+    }
+
+    // Function to get the current date in "yyyy-MM-dd" format
+    private fun getCurrentDate(): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd")
+        return sdf.format(Date())  // Get the current date and format it as a string
     }
 
     // Handle the Google Sign-In result
@@ -207,9 +243,9 @@ class SignActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign-in success
                     Log.d("GoogleSignIn", "signInWithCredential:success")
-                    saveUserData(this)  // Save user data if needed
+                    saveUserDataToUserTable(this, account.displayName ?: "", account.email ?: "", "")
                     // Redirect to home or another activity
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, LoginSelectionActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {

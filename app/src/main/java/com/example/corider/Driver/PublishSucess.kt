@@ -61,7 +61,9 @@ class PublishSucess : AppCompatActivity() {
 
         // Retrieve the user_id from SharedPreferences
         // val userId = 1 // Assuming this is a constant or retrieved differently
-        val userId = auth.currentUser?.uid.toString()
+        val sharedPreferencesuser = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val userId = sharedPreferencesuser.getString("userID", null) ?: "UnknownDriver"
+
 
         // Get the rest of the ride details from SharedPreferences
         val startLatitude = sharedPreferences.getFloat("start_latitude", -1f).toDouble()
@@ -106,7 +108,7 @@ class PublishSucess : AppCompatActivity() {
 
         // Generate a new key under the "RideInfo" node
         val newRideKey = database.child("RideInfo").push().key
-        ride.ride_id = newRideKey
+        ride.ride_id = newRideKey ?: "UnknownRideId"
 
         // Ensure the key is not null
         if (newRideKey != null) {
