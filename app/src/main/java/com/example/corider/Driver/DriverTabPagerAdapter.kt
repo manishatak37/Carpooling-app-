@@ -21,4 +21,3 @@ class DriverTabPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateA
         }
     }
 }
-

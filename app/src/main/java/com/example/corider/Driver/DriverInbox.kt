@@ -36,30 +36,45 @@ class DriverInbox : AppCompatActivity() {
     }
 
     private fun fetchNotifications() {
-        // Query Firebase to get notifications for userId "1" (adjust as per actual user ID)
-        database.child("notifications")
-            .orderByChild("userId")
-            .equalTo("1") // Adjust as per the user ID
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    notificationList.clear()  // Clear previous data
+        // Get the userId using the utility function
+        val userId = getUserIdFromPreferences()
 
-                    // Loop through the snapshot and get notifications
-                    for (dataSnapshot in snapshot.children) {
-                        val notification = dataSnapshot.getValue(Notification::class.java)
-                        notification?.let {
-                            notificationList.add(it)
+        if (userId != null) {
+            // Query Firebase to get notifications for the current user
+            database.child("notifications")
+                .orderByChild("userId")
+                .equalTo(userId)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        notificationList.clear()  // Clear previous data
+
+                        // Loop through the snapshot and get notifications
+                        for (dataSnapshot in snapshot.children) {
+                            val notification = dataSnapshot.getValue(Notification::class.java)
+                            notification?.let {
+                                notificationList.add(it)
+                            }
                         }
+
+                        // Notify the adapter about data changes
+                        notificationAdapter.notifyDataSetChanged()
                     }
 
-                    // Notify the adapter about data changes
-                    notificationAdapter.notifyDataSetChanged()
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    // Handle error
-                    Toast.makeText(this@DriverInbox, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
-                }
-            })
+                    override fun onCancelled(error: DatabaseError) {
+                        // Handle error
+                        Toast.makeText(this@DriverInbox, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
+        } else {
+            // Handle case where userId is not available
+            Toast.makeText(this@DriverInbox, "User ID not found. Please log in again.", Toast.LENGTH_SHORT).show()
+        }
     }
+
+
+    private fun getUserIdFromPreferences(): String? {
+        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        return sharedPreferences.getString("userID", null)
+    }
+
 }

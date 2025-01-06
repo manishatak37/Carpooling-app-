@@ -1,5 +1,6 @@
 package com.example.corider
 
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -123,32 +124,67 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+
     // Function to sign in user
     private fun signInUser(email: String, password: String) {
-        // Check if the credentials are for admin
-        if (email == "admin@gmail.com" && password == "admin") {
-            startActivity(Intent(this, Admin_home_page::class.java))
-            finish() // Prevent user from returning to login page using back button
-            return
-        }
+        // Reference to the "user" node in Firebase
+        val usersRef = database.child("user")
 
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+// Query to get all users
+        usersRef.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                val user: FirebaseUser? = auth.currentUser
-                updateUI(user)
+                val usersSnapshot = task.result
+
+                // Iterate over each user in the database
+                var userFound = false
+                for (userSnapshot in usersSnapshot.children) {
+                    val userEmail = userSnapshot.child("email").getValue(String::class.java)
+                    val userPassword = userSnapshot.child("userPassword").getValue(String::class.java)
+
+                    // Check if email and password match
+                    if (userEmail == email && userPassword == password) {
+                        val userId = userSnapshot.child("userId").getValue(String::class.java)
+                        userFound = true
+
+                        // Store userId in SharedPreferences
+                        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.putString("userID", userId)
+                        editor.apply()
+                        Log.d("LoginActivity", "User ID: ${userId}")
+
+                        // Navigate to Main Activity
+                        startActivity(Intent(this, LoginSelectionActivity::class.java))
+                        finish()
+                        break
+                    }
+                }
+
+                if (!userFound) {
+                    Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
+                }
             } else {
-                val errorMsg = task.exception?.localizedMessage ?: "Login failed!"
-                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show()
-                Log.e("LoginActivity", "Error: ${task.exception}")
+                Log.e("LoginActivity", "Error getting users", task.exception)
             }
         }
+
     }
+
 
     // Function to navigate to the main activity after successful login
     private fun updateUI(user: FirebaseUser?) {
+        Log.d("LoginActivity", "User ID: ${user?.uid}")
         user?.let {
-            startActivity(Intent(this, MainActivity::class.java))
+            // Store user ID in SharedPreferences
+            val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString("userID", user.uid)
+            editor.apply()
+
+            // Navigate to MainActivity
+            startActivity(Intent(this, LoginSelectionActivity::class.java))
             finish() // Optional: Prevent user from returning to login page using back button
         }
     }
+
 }

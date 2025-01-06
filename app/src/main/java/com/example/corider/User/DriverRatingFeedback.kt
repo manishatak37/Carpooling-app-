@@ -15,9 +15,10 @@ class DriverRatingFeedback : AppCompatActivity() {
     private lateinit var ratingBar: RatingBar
     private lateinit var feedbackEditText: EditText
     private lateinit var submitButton: Button
-    private var rideId: Int = 0
-    private var driverId: Int = 0
-    private var riderId: Int = 0
+    private var rideId: String = ""
+    private var driverId: String = ""
+    private var userId: String = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +35,17 @@ class DriverRatingFeedback : AppCompatActivity() {
             submitFeedback()
         }
     }
+    private fun getUserIdFromPreferences(): String {
+        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        // Provide a default value like empty string or other placeholder if userID is not found
+        return sharedPreferences.getString("userID", "") ?: ""
+    }
 
     // Initialize IDs for demonstration
     private fun initializeIds() {
-        rideId = 1
-        driverId = 1
-        riderId = 1
+        rideId = "1"
+        driverId = "1"
+        userId = getUserIdFromPreferences()
     }
 
     private fun submitFeedback() {
@@ -59,7 +65,7 @@ class DriverRatingFeedback : AppCompatActivity() {
         val feedbackData = hashMapOf<String, Any>(
             "rideId" to rideId,
             "driverId" to driverId,
-            "riderId" to riderId,
+            "userId" to userId,
             "rating" to rating,
             "feedback" to feedback
         )

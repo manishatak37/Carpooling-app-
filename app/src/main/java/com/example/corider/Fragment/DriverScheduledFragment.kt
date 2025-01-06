@@ -1,7 +1,10 @@
 package com.example.corider.Fragment
 
+import android.content.Context.*
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,14 +20,25 @@ class DriverScheduledFragment : Fragment(R.layout.activity_driver_scheduled_frag
     private val rideInfoList = ArrayList<RideInfo>()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: DriverDisplayRideAdapter
+    private var userId: String = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupRecyclerView(view)
 
         initializeDatabase()
+        userId = getUserIdFromPreferences()
+        Log.d("UserID", "$userId")
         fetchCancelledRides()
     }
+
+    private fun getUserIdFromPreferences(): String {
+        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        return sharedPreferences?.getString("userID", "") ?: ""  // Safely handle null case
+    }
+
+
 
     // Setup RecyclerView with layout manager and adapter
     private fun setupRecyclerView(view: View) {
@@ -43,7 +57,7 @@ class DriverScheduledFragment : Fragment(R.layout.activity_driver_scheduled_frag
     // Fetch cancelled rides from Firebase and update RecyclerView
     // Fetch rides with "scheduled" status and driver_id = "1" from Firebase and update RecyclerView
     private fun fetchCancelledRides() {
-        database.orderByChild("driver_id").equalTo("zntFzJmA1QTeaEc6EBVcSpRUhed2") // Filter by driver_id = "1"
+        database.orderByChild("driver_id").equalTo(userId) // Filter by driver_id = "1"
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     rideInfoList.clear() // Avoid duplicates
