@@ -47,7 +47,10 @@
                     android:inputType="textPersonName"
                     android:padding="8dp"
                     android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textDirection="ltr"
+                    android:textAlignment="textStart"
+                    />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -62,7 +65,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -73,7 +76,9 @@
                     android:text="About You"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textDirection="ltr"
+                    />
 
                 <EditText
                     android:id="@+id/aboutYou"
@@ -86,7 +91,10 @@
                     android:maxLines="5"
                     android:padding="8dp"
                     android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textDirection="ltr"
+                    android:textAlignment="textStart"
+                    />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -117,7 +125,7 @@
                 <Spinner
                     android:id="@+id/travelPreferencesSpinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="59dp"
                     android:background="?android:attr/editTextBackground"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
@@ -145,27 +153,36 @@
                     android:text="Vehicle Details"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"  />
 
                 <EditText
                     android:id="@+id/vehicleModel"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="53dp"
                     android:background="?android:attr/editTextBackground"
                     android:hint="Enter vehicle model"
                     android:padding="8dp"
                     android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textDirection="ltr"
+                    android:textAlignment="textStart"
+                    />
+
 
                 <EditText
                     android:id="@+id/vehicleNumber"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="64dp"
                     android:background="?android:attr/editTextBackground"
                     android:hint="Enter vehicle number"
                     android:padding="8dp"
                     android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textDirection="ltr"
+                    android:textAlignment="textStart"
+                     />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -199,8 +216,10 @@
                     android:layout_width="96dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal|center_vertical"
-                    android:gravity="center"
-                    android:text="1" />
+                    android:gravity="start"
+                    android:text="1"
+                    android:textAlignment="center"
+                    android:textDirection="ltr" />
             </LinearLayout>
 
 
@@ -219,15 +238,20 @@
                     android:layout_gravity="clip_horizontal|center|top"
                     android:text="Driving skill"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"  />
 
                 <TextView
                     android:id="@+id/drivingSkillEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal|center_vertical"
-                    android:gravity="center"
-                    android:text="Good" />
+
+                    android:gravity="start"
+                    android:text="Good"
+                    android:textAlignment="center"
+                    android:textDirection="ltr" />
 
 
             </androidx.cardview.widget.CardView>
@@ -254,8 +278,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal|center_vertical"
+
                     android:gravity="center"
-                    android:text="23" />
+                    android:text="23"
+                    android:textAlignment="center"
+                    android:textDirection="ltr" />
             </androidx.cardview.widget.CardView>
         </androidx.cardview.widget.CardView>
 
@@ -336,17 +363,6 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </androidx.cardview.widget.CardView>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/saveButton"
-            android:layout_width="166dp"
-            android:layout_height="76dp"
-            android:layout_gravity="center"
-            android:background="@drawable/newgreenbuttongradient"
-            android:fontFamily="@font/lato_bold"
-            android:text="Save"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
 
     </LinearLayout>
 </ScrollView>

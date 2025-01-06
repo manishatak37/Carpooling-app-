@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.corider.Driver.DriverInbox
-import com.example.corider.Driver.DriverProfile
 import com.example.corider.Driver.PublishActivity
+import com.example.corider.Fragment.ProfileFragment
 import com.example.corider.R
 import com.google.android.material.navigation.NavigationView
 
@@ -58,7 +58,7 @@ class UserNavigation : AppCompatActivity() {
                 }
                 R.id.Profile -> {
                     // Redirect to another activity
-                    val intent = Intent(this, DriverProfile::class.java)
+                    val intent = Intent(this, ProfileFragment::class.java)
                     startActivity(intent)
                 }
                 R.id.Inbox -> {

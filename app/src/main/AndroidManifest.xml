@@ -43,9 +43,11 @@
         <activity
             android:name=".Driver.DriverDisplayRide"
             android:exported="true"/>
+
         <activity
-            android:name=".Driver.DriverProfile"
+            android:name=".LoginActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -104,9 +106,7 @@
         <activity
             android:name=".SignActivity"
             android:exported="true" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true" />
+
         <activity
             android:name=".StartActivity"
             android:exported="false" />
