@@ -1,6 +1,8 @@
 package com.example.corider.Fragment
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,12 +19,15 @@ class DriverCancelledFragment : Fragment(R.layout.activity_driver_cancelled_frag
     private val rideInfoList = ArrayList<RideInfo>()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: DriverDisplayRideAdapter
+    private var userId: String = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView(view)
 
         initializeDatabase()
+        userId = getUserIdFromPreferences()
+        Log.d("UserID", "$userId")
         fetchCancelledRides()
     }
 
@@ -33,6 +38,13 @@ class DriverCancelledFragment : Fragment(R.layout.activity_driver_cancelled_frag
         recyclerView.setHasFixedSize(true)
         adapter = DriverDisplayRideAdapter(rideInfoList)
         recyclerView.adapter = adapter
+    }
+
+    private fun getUserIdFromPreferences(): String {
+        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs",
+            Context.MODE_PRIVATE
+        )
+        return sharedPreferences?.getString("userID", "") ?: ""  // Safely handle null case
     }
 
     // Initialize Firebase Database reference
