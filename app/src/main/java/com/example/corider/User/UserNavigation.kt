@@ -11,6 +11,7 @@ import com.example.corider.Driver.DriverInbox
 import com.example.corider.Driver.PublishActivity
 import com.example.corider.Fragment.ProfileFragment
 import com.example.corider.R
+import com.example.corider.UserProfilePageActivity
 import com.google.android.material.navigation.NavigationView
 
 class UserNavigation : AppCompatActivity() {
@@ -58,7 +59,7 @@ class UserNavigation : AppCompatActivity() {
                 }
                 R.id.Profile -> {
                     // Redirect to another activity
-                    val intent = Intent(this, ProfileFragment::class.java)
+                    val intent = Intent(this, UserProfilePageActivity::class.java)
                     startActivity(intent)
                 }
                 R.id.Inbox -> {

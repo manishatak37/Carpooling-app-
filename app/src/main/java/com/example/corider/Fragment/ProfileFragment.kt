@@ -44,8 +44,10 @@ class ProfileFragment : Fragment() {
     private var currentUser: FirebaseUser? = null
     private var userId = "user123"
 
-    // Store a reference to the image selection callback
     private var onImageSelected: ((Uri) -> Unit)? = null
+
+    // Store a reference to the image selection callback
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
