@@ -1,5 +1,6 @@
 package com.example.corider.Fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -37,7 +38,12 @@ class UserCancelledFragment : Fragment(R.layout.activity_user_cancelled_fragment
         adapter = UserDisplayRideAdapter(rideInfoList)
         recyclerView.adapter = adapter
     }
-
+    private fun getUserIdFromPreferences(): String {
+        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs",
+            Context.MODE_PRIVATE
+        )
+        return sharedPreferences?.getString("userID", "") ?: ""  // Safely handle null case
+    }
     // Initialize Firebase Database reference
     private fun initializeDatabase() {
         database = FirebaseDatabase.getInstance().reference
