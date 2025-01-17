@@ -138,6 +138,9 @@
         <meta-data
             android:name="razorpay.api_key"
             android:value="@string/razropay_api_key" />
+
+
+
     </application>
 
 </manifest>
