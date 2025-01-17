@@ -22,7 +22,8 @@ class RazorpayPayment : AppCompatActivity(), PaymentResultListener {
 
         // Fetch the totalPrice value from the shared preferences
         val sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE)
-        val totalPrice = sharedPreferences.getString("totalPrice", "0.00") ?: "0.00"
+        val totalPrice = sharedPreferences.getFloat("totalPrice", 0.00f).toString()
+
 
         // Set the totalPrice value in the EditText and make it read-only
         etAmount.setText(totalPrice)
@@ -40,7 +41,7 @@ class RazorpayPayment : AppCompatActivity(), PaymentResultListener {
         checkout.setKeyID(keyID)
 
         // Convert the amount to paisa (1 INR = 100 paisa)
-        val amountInPaisa = 200*100
+        val amountInPaisa = (amountInRupees.toDouble() * 100).toInt()
 
         if (amountInPaisa == null || amountInPaisa <= 0) {
             Toast.makeText(this, "Invalid amount stored in preferences", Toast.LENGTH_SHORT).show()

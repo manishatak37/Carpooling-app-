@@ -1,6 +1,6 @@
 package com.example.corider.User
 
-import RideAdapter
+import com.example.corider.User.RideAdapter
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import android.location.Geocoder
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.corider.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -32,15 +33,13 @@ class ride_resultsonsearch : AppCompatActivity() {
         setContentView(R.layout.activity_serch_ride_resultpage)
 
         auth = Firebase.auth
-        val userId = auth.currentUser?.uid.toString()
-
-        // Initialize Firebase Database reference
+                // Initialize Firebase Database reference
         database = FirebaseDatabase.getInstance().reference.child("RideInfo")
 
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.searchResultsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = RideAdapter(listOf(),this,userId)
+        adapter = RideAdapter(listOf(),this)
         recyclerView.adapter = adapter
 
         // Initialize SharedPreferences
@@ -59,6 +58,7 @@ class ride_resultsonsearch : AppCompatActivity() {
         // Search for rides in Firebase
         fetchRides(pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude)
     }
+
 
     private fun fetchRides(
         pickupLatitude: Double,

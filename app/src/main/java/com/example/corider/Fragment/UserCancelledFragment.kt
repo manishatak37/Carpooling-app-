@@ -20,13 +20,14 @@ class UserCancelledFragment : Fragment(R.layout.activity_user_cancelled_fragment
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UserDisplayRideAdapter
 
-    private val userId = "zntFzJmA1QTeaEc6EBVcSpRUhed2" // Replace with the actual user ID logic
+    private var userId: String = ""  // Replace with the actual user ID logic
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView(view)
 
         initializeDatabase()
+        userId = getUserIdFromPreferences()
         fetchCompletedRides(userId)
     }
 
