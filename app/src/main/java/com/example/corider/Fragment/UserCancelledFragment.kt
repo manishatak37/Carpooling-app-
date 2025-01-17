@@ -1,5 +1,6 @@
 package com.example.corider.Fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -19,13 +20,14 @@ class UserCancelledFragment : Fragment(R.layout.activity_user_cancelled_fragment
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UserDisplayRideAdapter
 
-    private val userId = "zntFzJmA1QTeaEc6EBVcSpRUhed2" // Replace with the actual user ID logic
+    private var userId: String = ""  // Replace with the actual user ID logic
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView(view)
 
         initializeDatabase()
+        userId = getUserIdFromPreferences()
         fetchCompletedRides(userId)
     }
 
@@ -37,7 +39,12 @@ class UserCancelledFragment : Fragment(R.layout.activity_user_cancelled_fragment
         adapter = UserDisplayRideAdapter(rideInfoList)
         recyclerView.adapter = adapter
     }
-
+    private fun getUserIdFromPreferences(): String {
+        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs",
+            Context.MODE_PRIVATE
+        )
+        return sharedPreferences?.getString("userID", "") ?: ""  // Safely handle null case
+    }
     // Initialize Firebase Database reference
     private fun initializeDatabase() {
         database = FirebaseDatabase.getInstance().reference

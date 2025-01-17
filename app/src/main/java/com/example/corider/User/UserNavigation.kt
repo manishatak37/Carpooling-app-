@@ -54,7 +54,7 @@ class UserNavigation : AppCompatActivity() {
                 }
                 R.id.ViewRides -> {
                     // Redirect to another activity
-                    val intent = Intent(this, PublishActivity::class.java)
+                    val intent = Intent(this, UserDisplayRide::class.java)
                     startActivity(intent)
                 }
                 R.id.Profile -> {

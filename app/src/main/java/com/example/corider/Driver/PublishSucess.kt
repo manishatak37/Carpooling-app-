@@ -10,12 +10,39 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.corider.Driver.DriverNavigation
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.example.corider.User.RideInfo
 import android.location.Address
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.*
+import javax.mail.Authenticator
+import javax.mail.Message
+import javax.mail.PasswordAuthentication
+import javax.mail.Session
+import javax.mail.Transport
+import javax.mail.internet.InternetAddress
+import javax.mail.internet.MimeMessage
+import java.io.Serializable
+
+data class RideInfo(
+    var ride_id: String= "",
+    var driver_id: String,
+    var start_latitude: Double = 0.0,
+    var start_longitude: Double = 0.0,
+    var end_latitude: Double = 0.0,
+    var end_longitude: Double = 0.0,
+    var departure_date: String = "",
+    var departure_time: String = "",
+    var available_seats: Int = 0,
+    var price_per_seat: Double = 0.0,
+    var ride_status: String = "",
+    var start_location: String = "",
+    var end_location: String = "",
+    var car_model: String = ""
+) :  Serializable
 
 class PublishSucess : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -36,11 +63,18 @@ class PublishSucess : AppCompatActivity() {
 
         // Retrieve ride details from SharedPreferences
         val rideDetails = loadRideDetails()
+//        if (!userEmail.isNullOrEmpty()) {
+//            sendGmailNotification(userEmail, rideDetails)
+//        }
+
 
         if (rideDetails != null) {
             Log.e("PublishSuccess", "Till year it is getting executed")
             // Save the new ride to Firebase
             saveRideToDatabase(rideDetails)
+            if (rideDetails != null) {
+                sendGmailNotification("jagrutisingh1519@gmail.com", rideDetails)
+            }
         } else {
             // Handle the case where ride details are not available
             Log.e("PublishSuccess", "Failed to load ride details")
@@ -137,6 +171,57 @@ class PublishSucess : AppCompatActivity() {
         }
     }
 
+    private fun sendGmailNotification(recipientEmail: String, rideDetails: RideInfo) {
+        val senderEmail = "takmanisha67@gmail.com" // Replace with your Gmail address
+        val senderPassword = "jvul sqxx ognp hpjq"     // Replace with your Gmail password or app password
+
+        var subject = "Ride Published Successfully!"
+        val messageBody = """
+            Dear User,
+            
+            Your ride has been successfully published with the following details:
+            
+            - Start Location: ${rideDetails.start_location}
+            - End Location: ${rideDetails.end_location}
+            - Departure Date: ${rideDetails.departure_date}
+            - Departure Time: ${rideDetails.departure_time}
+            - Available Seats: ${rideDetails.available_seats}
+            - Price Per Seat: ${rideDetails.price_per_seat}
+
+            Thank you for using our service!
+
+            Regards,
+            The Corider Team
+        """.trimIndent()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val props = Properties()
+                props["mail.smtp.auth"] = "true"
+                props["mail.smtp.starttls.enable"] = "true"
+                props["mail.smtp.host"] = "smtp.gmail.com"
+                props["mail.smtp.port"] = "587"
+
+                val session = Session.getInstance(props, object : Authenticator() {
+                    override fun getPasswordAuthentication(): PasswordAuthentication {
+                        return PasswordAuthentication(senderEmail, senderPassword)
+                    }
+                })
+
+                val message = MimeMessage(session).apply {
+                    setFrom(InternetAddress(senderEmail))
+                    setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail))
+                    subject = subject
+                    setText(messageBody)
+                }
+
+                Transport.send(message)
+                Log.d("GmailNotification", "Email sent successfully to $recipientEmail")
+            } catch (e: Exception) {
+                Log.e("GmailNotification", "Failed to send email: ${e.message}")
+            }
+        }
 
 
+    }
 }

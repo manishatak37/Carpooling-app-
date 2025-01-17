@@ -1,7 +1,8 @@
-
-
+package com.example.corider.User
 
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
-
+import com.example.corider.Payment.RazorpayPayment
 import android.widget.Toast
 import com.example.corider.User.RideInfo
 
@@ -23,33 +24,47 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.MutableData
 import com.google.firebase.database.Transaction
+import java.io.Serializable
 
 // Data classes
 data class RideInfo(
-    val ride_id: Int,
-    val user_id: String,
-    val start_location: String,
-    val end_location: String,
-    val car_model: String,
-    val departure_date: String,
-    val departure_time: String,
-    val price_per_seat: Double
-)
+    var ride_id: String?= "",
+    var driver_id: String ="",
+    var start_latitude: Double = 0.0,
+    var start_longitude: Double = 0.0,
+    var end_latitude: Double = 0.0,
+    var end_longitude: Double = 0.0,
+    var departure_date: String = "",
+    var departure_time: String = "",
+    var available_seats: Int = 0,
+    var price_per_seat: Double = 0.0,
+    var ride_status: String = "",
+    var start_location: String = "",
+    var end_location: String = "",
+    var car_model: String = ""
+) : Serializable
 
 data class BookingDetails(
     val rideId: String? = "",
+    val driverId: String = "",
     val userId: String = "",
     val seatsToBook: Int = 0,
     val bookingTime: Long = 0L
 )
 
-class RideAdapter(
+public class RideAdapter(
     private var rideList: List<RideInfo>,
     private val context: Context,
-    private val userId: String
+
 ) : RecyclerView.Adapter<RideAdapter.RideViewHolder>() {
 
     private val database: DatabaseReference = FirebaseDatabase.getInstance().reference
+    // Custom click listener
+    private var onItemClickListener: ((RideInfo, Int) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (RideInfo, Int) -> Unit) {
+        onItemClickListener = listener
+    }
 
     class RideViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val rideTitle: TextView = itemView.findViewById(R.id.rideTitle)
@@ -85,10 +100,32 @@ class RideAdapter(
 
         holder.bookRideButton.setOnClickListener {
             showBookingDialog(ride)
+
+
         }
     }
 
     override fun getItemCount(): Int = rideList.size
+
+    private fun getUserIdFromPrefs(): String {
+        val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("userID", "") ?: ""
+    }
+
+    private fun storeRideDetails(pricePerSeat: Double, seatsToBook: Int) {
+        // Calculate the total price
+        val sharedPreferencesbooking = context.getSharedPreferences("BookRideDetails", Context.MODE_PRIVATE)
+        val totalPrice = pricePerSeat * seatsToBook
+
+        // Store the details in SharedPreferences
+        val editor = sharedPreferencesbooking.edit()
+        editor.putInt("seatsBooked", seatsToBook)
+        editor.putFloat("totalPrice", totalPrice.toFloat())
+        editor.apply()
+
+        // Log for debugging
+        Log.d("RideDetails", " Seats: $seatsToBook, Total Price: $totalPrice")
+    }
 
     private fun showBookingDialog(ride: RideInfo) {
         val builder = AlertDialog.Builder(context)
@@ -112,22 +149,35 @@ class RideAdapter(
         }
 
         btnConfirmBooking.setOnClickListener {
+
             // Retrieve seat count entered by user
             val seatsToBook = edtSeats.text.toString().toIntOrNull()
+
 
             // Validate the seat input
             if (seatsToBook == null || seatsToBook <= 0) {
                 Toast.makeText(context, "Please enter a valid number of seats", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            storeRideDetails(ride.price_per_seat, seatsToBook)
+
 
             // Show loading spinner while processing the booking
             loadingSpinner.visibility = View.VISIBLE
+
             val rideId = ride.ride_id.toString()
+
+            val userId = getUserIdFromPrefs()
+
+            if (userId.isEmpty()) {
+                Toast.makeText(context, "User ID not found. Please log in again.", Toast.LENGTH_SHORT).show()
+            }
+            Log.d("USerid", userId)
 
             Log.d("RideInfo", ride.toString())
             // Directly access the ride using ride_id as the key in the database
             val rideRef = database.child("RideInfo").child(rideId)
+
 
             rideRef.get().addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
@@ -138,7 +188,8 @@ class RideAdapter(
                         // Proceed with booking if there are enough seats
                         val bookingDetails = BookingDetails(
                             rideId = ride.ride_id,
-                            userId = ride.driver_id,
+                            driverId = ride.driver_id,
+                            userId = userId,
                             seatsToBook = seatsToBook,
                             bookingTime = System.currentTimeMillis()
                         )
@@ -147,10 +198,9 @@ class RideAdapter(
                         rideRef.child("available_seats")
                             .runTransaction(object : Transaction.Handler {
                                 override fun doTransaction(currentData: MutableData): Transaction.Result {
-                                    val currentSeats = currentData.getValue(Int::class.java) ?: return Transaction.success(currentData) //here made the change
+                                    val currentSeats = currentData.getValue(Int::class.java) ?: return Transaction.success(currentData)
                                     return if (currentSeats >= seatsToBook) {
                                         currentData.value = currentSeats - seatsToBook
-//
                                         Transaction.success(currentData)
                                     } else {
                                         // Abort transaction if not enough seats are available
@@ -170,7 +220,9 @@ class RideAdapter(
                                             .setValue(bookingDetails)
                                             .addOnSuccessListener {
                                                 // Successfully booked the seats
-                                                Toast.makeText(context, "Booking successful!", Toast.LENGTH_LONG).show()
+
+                                                val intent = Intent(context, RazorpayPayment::class.java)
+                                                context.startActivity(intent)
                                                 dialog.dismiss()
                                             }
                                             .addOnFailureListener {

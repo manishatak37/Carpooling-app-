@@ -12,6 +12,7 @@ import org.json.JSONObject
 class RazorpayPayment : AppCompatActivity(), PaymentResultListener {
 
     private lateinit var etAmount: EditText
+    private val sharedPrefFile = "BookRideDetails"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,13 +20,18 @@ class RazorpayPayment : AppCompatActivity(), PaymentResultListener {
 
         etAmount = findViewById(R.id.et_amount)
 
+        // Fetch the totalPrice value from the shared preferences
+        val sharedPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE)
+        val totalPrice = sharedPreferences.getFloat("totalPrice", 0.00f).toString()
+
+
+        // Set the totalPrice value in the EditText and make it read-only
+        etAmount.setText(totalPrice)
+        etAmount.isFocusable = false
+        etAmount.isClickable = false
+
         findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.btn_pay).setOnClickListener {
-            val amountInRupees = etAmount.text.toString().trim()
-            if (amountInRupees.isEmpty()) {
-                Toast.makeText(this, "Please enter an amount", Toast.LENGTH_SHORT).show()
-            } else {
-                startPayment(amountInRupees)
-            }
+            startPayment(totalPrice)
         }
     }
 
@@ -35,10 +41,10 @@ class RazorpayPayment : AppCompatActivity(), PaymentResultListener {
         checkout.setKeyID(keyID)
 
         // Convert the amount to paisa (1 INR = 100 paisa)
-        val amountInPaisa = (amountInRupees.toFloatOrNull()?.times(100))?.toInt()
+        val amountInPaisa = (amountInRupees.toDouble() * 100).toInt()
 
         if (amountInPaisa == null || amountInPaisa <= 0) {
-            Toast.makeText(this, "Invalid amount entered", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Invalid amount stored in preferences", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -55,9 +61,9 @@ class RazorpayPayment : AppCompatActivity(), PaymentResultListener {
         }
     }
 
-
     override fun onPaymentSuccess(razorpayPaymentID: String?) {
         Toast.makeText(this, "Payment Successful: $razorpayPaymentID", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Booking successful!", Toast.LENGTH_LONG).show()
     }
 
     override fun onPaymentError(code: Int, response: String?) {

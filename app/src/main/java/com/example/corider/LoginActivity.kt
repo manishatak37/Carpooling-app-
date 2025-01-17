@@ -57,9 +57,17 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             email = binding.loginemail.text.toString().trim()
             password = binding.loginpassword.text.toString().trim()
-
-            if (validateInput()) {
+            if (email == "admin@gmail.com" && password == "admin") {
+                // Redirect to Admin Home Page
+                val intent = Intent(this, Admin_home_page::class.java)
+                startActivity(intent)
+                finish() // Optional: Finish the login activity so it can't be returned to
+            }
+            else if (validateInput()){                // Normal user login logic
                 signInUser(email, password)
+            }
+            else{
+
             }
         }
 

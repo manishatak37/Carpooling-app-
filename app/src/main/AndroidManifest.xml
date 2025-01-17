@@ -29,7 +29,9 @@
         <!-- Razorpay Payment Activity -->
         <activity
             android:name=".Payment.RazorpayPayment"
-            android:exported="true"></activity>
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".Fragment.UserCancelledFragment"
             android:exported="false" />
@@ -41,7 +43,9 @@
             android:exported="false" />
         <activity
             android:name=".User.UserDisplayRide"
-            android:exported="true"></activity>
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".User.DriverRatingFeedback"
             android:exported="true" />
@@ -65,13 +69,20 @@
             android:exported="true" />
         <activity
             android:name=".User.UserNavigation"
-            android:exported="true" />
+            android:exported="true" >
+            r>
+
+        </activity>
         <activity
             android:name=".User.SearchRideActivity"
-            android:exported="true" />
+            android:exported="true" >
+
+        </activity>
         <activity
             android:name=".Driver.PublishActivity"
-            android:exported="true" />
+            android:exported="true" >
+
+        </activity>
         <activity
             android:name=".Driver.DriverInbox"
             android:exported="false" />
@@ -114,6 +125,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".StartActivity"

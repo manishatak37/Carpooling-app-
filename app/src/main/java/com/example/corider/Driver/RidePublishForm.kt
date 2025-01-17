@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.corider.R
+import java.text.SimpleDateFormat
 import java.util.*
 
 class RidePublishForm : AppCompatActivity() {
@@ -58,17 +59,51 @@ class RidePublishForm : AppCompatActivity() {
         val date = dateInput.text.toString().trim()
         val time = timeInput.text.toString().trim()
         val passengersInput = passengerInput.text.toString().trim()
-        val passengers = passengersInput.toInt()
-
         val carModel = carModelInput.text.toString().trim()
 
-        // Validate inputs
         if (date.isEmpty() || time.isEmpty() || passengersInput.isEmpty() || carModel.isEmpty()) {
-            Log.e("RidePublishForm", "Please fill in all fields.")
             Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
             return
         }
 
+        // Validate date
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val selectedDate = sdf.parse(date)
+        val currentDate = Calendar.getInstance().time
+        val maxDate = Calendar.getInstance().apply { add(Calendar.MONTH, 1) }.time
+
+        if (selectedDate.before(currentDate)) {
+            Toast.makeText(this, "Date cannot be in the past.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (selectedDate.after(maxDate)) {
+            Toast.makeText(this, "Date cannot be more than one month from now.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Validate time if the selected date is today
+        if (sdf.format(selectedDate) == sdf.format(currentDate)) {
+            val timeSdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val selectedTime = timeSdf.parse(time)
+            val currentTime = Calendar.getInstance().time
+            if (selectedTime.before(currentTime)) {
+                Toast.makeText(this, "Time cannot be in the past for today.", Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
+
+        // Validate passengers
+        val passengers = passengersInput.toIntOrNull()
+        if (passengers == null || passengers < 1 || passengers > 4) {
+            Toast.makeText(this, "Passengers must be between 1 and 4.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Validate car model (example: alphanumeric check)
+        if (!carModel.matches(Regex("^[A-Za-z0-9\\s-]{1,20}$"))) {
+            Toast.makeText(this, "Invalid car model. Only alphanumeric and dashes allowed.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         // Save the ride details in SharedPreferences
         val sharedPreferences = getSharedPreferences("RideDetails", MODE_PRIVATE)

@@ -1,6 +1,8 @@
 package com.example.corider.User
 
-import RideAdapter
+import com.example.corider.User.RideAdapter
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import android.location.Geocoder
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.corider.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -22,6 +25,7 @@ class ride_resultsonsearch : AppCompatActivity() {
     private lateinit var adapter: RideAdapter
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
+    private lateinit var sharedPreferences: SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,16 +33,17 @@ class ride_resultsonsearch : AppCompatActivity() {
         setContentView(R.layout.activity_serch_ride_resultpage)
 
         auth = Firebase.auth
-        val userId = auth.currentUser?.uid.toString()
-
-        // Initialize Firebase Database reference
+                // Initialize Firebase Database reference
         database = FirebaseDatabase.getInstance().reference.child("RideInfo")
 
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.searchResultsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = RideAdapter(listOf(),this,userId)
+        adapter = RideAdapter(listOf(),this)
         recyclerView.adapter = adapter
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences("BookRideDetails", Context.MODE_PRIVATE)
 
         // Fetch search criteria from intent
         val pickupLatitude = intent.getDoubleExtra("pickup_latitude", 0.0)
@@ -53,6 +58,7 @@ class ride_resultsonsearch : AppCompatActivity() {
         // Search for rides in Firebase
         fetchRides(pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude)
     }
+
 
     private fun fetchRides(
         pickupLatitude: Double,
@@ -69,21 +75,21 @@ class ride_resultsonsearch : AppCompatActivity() {
                         if (rideInfo.available_seats > 0) {
 
                             // Fetch human-readable place names
-                        val pickupPlace = getPlaceName(rideInfo.start_latitude, rideInfo.start_longitude)
-                        val destinationPlace = getPlaceName(rideInfo.end_latitude, rideInfo.end_longitude)
+                            val pickupPlace = getPlaceName(rideInfo.start_latitude, rideInfo.start_longitude)
+                            val destinationPlace = getPlaceName(rideInfo.end_latitude, rideInfo.end_longitude)
 
-                        // Log each ride data
-                        Log.d("SearchResults", "Pickup: $pickupPlace, Destination: $destinationPlace")
+                            // Log each ride data
+                            Log.d("SearchResults", "Pickup: $pickupPlace, Destination: $destinationPlace")
 
-                        // Range-based comparison
-                        if (isWithinRange(rideInfo, pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude)) {
-                            // Update RideInfo to include human-readable names
-                            rideInfo.start_location = pickupPlace
-                            rideInfo.end_location = destinationPlace
-                            ridesList.add(rideInfo)
+                            // Range-based comparison
+                            if (isWithinRange(rideInfo, pickupLatitude, pickupLongitude, destinationLatitude, destinationLongitude)) {
+                                // Update RideInfo to include human-readable names
+                                rideInfo.start_location = pickupPlace
+                                rideInfo.end_location = destinationPlace
+                                ridesList.add(rideInfo)
+                            }
                         }
-                    }
-                }}
+                    }}
                 Log.d("Fetched Rides : ", ridesList.toString())
                 updateRecyclerView(ridesList)
             }
@@ -93,6 +99,19 @@ class ride_resultsonsearch : AppCompatActivity() {
                 Toast.makeText(this@ride_resultsonsearch, "Failed to fetch rides.", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+    private fun storeRideDetails(pricePerSeat: Double, seatsToBook: Int) {
+        // Calculate the total price
+        val totalPrice = pricePerSeat * seatsToBook
+
+        // Store the details in SharedPreferences
+        val editor = sharedPreferences.edit()
+        editor.putInt("seatsBooked", seatsToBook)
+        editor.putFloat("totalPrice", totalPrice.toFloat())
+        editor.apply()
+
+        // Log for debugging
+        Log.d("RideDetails", " Seats: $seatsToBook, Total Price: $totalPrice")
     }
 
     private fun getPlaceName(latitude: Double, longitude: Double): String {
@@ -139,9 +158,16 @@ class ride_resultsonsearch : AppCompatActivity() {
     }
 
     private fun updateRecyclerView(ridesList: List<RideInfo>) {
-        if (ridesList.isEmpty()) {
-            Toast.makeText(this, "No rides found.", Toast.LENGTH_SHORT).show()
-        }
         adapter.updateData(ridesList)
+
+        adapter.setOnItemClickListener { rideInfo, seatsToBook ->
+            // Assuming `RideAdapter` calls this function on ride selection
+            if (seatsToBook > 0) {
+                storeRideDetails(rideInfo.price_per_seat, seatsToBook)
+                Toast.makeText(this, "Ride booked successfully!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Please select at least one seat.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
