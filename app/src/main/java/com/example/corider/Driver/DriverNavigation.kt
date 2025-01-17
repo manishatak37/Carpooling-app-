@@ -7,7 +7,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.example.corider.Fragment.ProfileFragment
+
 import com.example.corider.R
 import com.google.android.material.navigation.NavigationView
 

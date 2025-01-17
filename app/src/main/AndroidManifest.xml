@@ -70,7 +70,7 @@
         <activity
             android:name=".User.UserNavigation"
             android:exported="true" >
-            r>
+
 
         </activity>
         <activity
@@ -78,6 +78,10 @@
             android:exported="true" >
 
         </activity>
+
+        <activity
+            android:name=".Driver.ProfileFragment"
+            android:exported="true" />
         <activity
             android:name=".Driver.PublishActivity"
             android:exported="true" >
