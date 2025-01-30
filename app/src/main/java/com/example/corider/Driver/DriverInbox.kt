@@ -35,6 +35,7 @@ class DriverInbox : AppCompatActivity() {
         fetchNotifications()
     }
 
+
     private fun fetchNotifications() {
         // Get the userId using the utility function
         val userId = getUserIdFromPreferences()
