@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Driver.RidePublishForm"
+    android:background="@drawable/homepage_gradient"
     android:orientation="vertical">
 
     <TextView
@@ -95,13 +96,13 @@
                 android:padding="12dp"
                 android:layout_marginBottom="24dp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/submit_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Next"
                 android:textColor="#FFFFFF"
-                android:background="@drawable/greenbuttongradient"
+                android:background="@drawable/newgreenbuttongradient"
                 android:padding="16dp"
                 android:textSize="16sp"
                 android:layout_marginTop="16dp" />

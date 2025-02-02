@@ -4,6 +4,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:orientation="vertical"
+    android:background="@drawable/searchpage_gradient"
 android:layout_height="match_parent"
 tools:context=".User.UserHomePage">
 
@@ -11,7 +12,7 @@ tools:context=".User.UserHomePage">
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#BCBCBC" >
+    android:background="#60ED66" >
 
     <ImageButton
         android:id="@+id/buttondrawerToggle"

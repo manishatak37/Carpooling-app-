@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Driver.PublishSucess">
+    android:background="@drawable/loginpage_gradient"
+    tools:context=".PublishSucess">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -41,7 +42,7 @@
         android:textColor="@color/black"
         android:textSize="18sp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/continue_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,7 +51,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="61dp"
         android:layout_marginBottom="304dp"
-        android:background="@drawable/greenbuttongradient"
+        android:background="@drawable/newgreenbuttongradient"
         android:padding="16dp"
         android:text="Continue"
         android:textColor="#FFFFFF"

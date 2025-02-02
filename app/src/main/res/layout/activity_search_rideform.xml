@@ -5,15 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".User.SearchRideForm"
+    android:background="@drawable/searchpage_gradient"
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Search for your suitable  ride"
-        android:textSize="28sp"
-        android:textColor="#3B3B3B"
         android:layout_marginBottom="24dp"
+        android:text="Search for your suitable  ride"
+        android:textColor="#3B3B3B"
+        android:textSize="28sp"
         android:textStyle="bold" />
 
     <androidx.cardview.widget.CardView
@@ -95,16 +96,18 @@
                 android:padding="12dp"
                 android:layout_marginBottom="24dp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/submit_button"
-                android:layout_width="match_parent"
+                android:layout_width="372dp"
                 android:layout_height="wrap_content"
-                android:text="Next"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/greenbuttongradient"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/newgreenbuttongradient"
                 android:padding="16dp"
-                android:textSize="16sp"
-                android:layout_marginTop="16dp" />
+                android:text="Next"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="@color/white"
+                android:textSize="24sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="30dp"
     android:layout_marginBottom="8dp"
+    android:background="@drawable/homepage_gradient"
     android:elevation="8dp"
     >
 
