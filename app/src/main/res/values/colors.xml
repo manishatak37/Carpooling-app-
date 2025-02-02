@@ -3,5 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="textColor">#00FF00</color>
-    <color name="gray">#E2E1E1</color> <!-- Removed the dot at the end -->
+    <color name="gray">#E2E1E1</color>
+    <color name="teal_700">#00796B</color>
+    <!-- Removed the dot at the end -->
 </resources>

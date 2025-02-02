@@ -162,10 +162,11 @@
                     android:layout_width="96dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal|center_vertical"
-                    android:gravity="start"
+                    android:gravity="center_horizontal"
                     android:text="1"
                     android:textAlignment="center"
                     android:textDirection="ltr" />
+
             </LinearLayout>
 
             <androidx.cardview.widget.CardView

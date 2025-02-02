@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Horizontal ScrollView to enable horizontal scrolling for TableLayout -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="horizontal">
+
+        <!-- TableLayout to hold the user data rows -->
+        <TableLayout
+            android:id="@+id/tableLayoutUsers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1"
+            android:padding="8dp"
+            android:divider="@android:color/darker_gray"
+            android:showDividers="middle"
+            android:contentDescription="This is displaying table">
+
+            <!-- Table Header -->
+
+
+        </TableLayout>
+
+    </HorizontalScrollView>
+
+</LinearLayout>

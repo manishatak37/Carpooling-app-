@@ -218,8 +218,9 @@
                     android:layout_gravity="fill_horizontal|center_vertical"
                     android:gravity="start"
                     android:text="1"
-                    android:textAlignment="center"
+                    android:textAlignment="viewStart"
                     android:textDirection="ltr" />
+
             </LinearLayout>
 
 
@@ -248,8 +249,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal|center_vertical"
 
-                    android:gravity="start"
                     android:text="Good"
+                    android:gravity="start"
                     android:textAlignment="center"
                     android:textDirection="ltr" />
 
