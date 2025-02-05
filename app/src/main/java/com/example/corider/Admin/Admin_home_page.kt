@@ -103,7 +103,7 @@ class Admin_home_page : AppCompatActivity() {
                     var totalAmount = 0.0
                     for (transactionSnapshot in snapshot.children) {
                         val transaction = transactionSnapshot.getValue(TransactionInfo::class.java)
-                        totalAmount += transaction?.amount ?: 0.0
+                        totalAmount += transaction?.amountPaid ?: 0.0
                     }
                     // Update the TextView with the total amount, formatted as needed
                     sumOfTransactionTextView.text = String.format("%.2f", totalAmount) // Formatting for two decimal places
