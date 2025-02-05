@@ -1,34 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:orientation="vertical"
-    android:background="@drawable/searchpage_gradient"
-android:layout_height="match_parent"
-tools:context=".User.UserHomePage">
-
-<androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#60ED66" >
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/searchpage_gradient"
+    android:padding="16dp"
+    tools:context=".User.UserHomePage">
 
-    <ImageButton
-        android:id="@+id/buttondrawerToggle"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/drawable_menu"
-        android:background="@android:color/transparent"
-        android:padding="12dp"
-        android:contentDescription="Toggle Drawer" />
+    <!-- Toolbar with Profile Icon and Drawer Button -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cardgreen"
+        android:elevation="4dp"
+        android:padding="8dp">
 
+        <ImageButton
+            android:id="@+id/buttondrawerToggle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/drawable_menu"
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            android:contentDescription="Toggle Drawer" />
 
-</androidx.appcompat.widget.Toolbar>
+        <TextView
+            android:id="@+id/textWelcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingStart="12dp"
+            android:text="Welcome, User!"
+            android:textColor="@color/teal_700"
+            android:textSize="18sp" />
+    </androidx.appcompat.widget.Toolbar>
 
+    <!-- Decorative Line -->
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="?android:attr/listDivider" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/loginpage_gradient"
+        android:layout_marginTop="4dp" />
 
+    <!-- Welcome Message -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="58dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/lato_regular"
+        android:text="Explore rides, find your match! 🚗💨 Let's get moving!"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
+    <!-- Decorative Image -->
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="390dp"
+        android:layout_height="474dp"
+        app:srcCompat="@drawable/design" />
 
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
 
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="?android:attr/listDivider" />
 </LinearLayout>
