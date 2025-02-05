@@ -23,15 +23,23 @@
         android:theme="@style/Theme.Corider"
         tools:targetApi="31">
         <activity
+            android:name=".User.ViewBookingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Driver.Successful_Ride_completed"
+            android:exported="false" />
+        <activity
+            android:name=".Admin.View_feedback"
+            android:exported="true" />
+        <activity
             android:name=".Admin.View_user"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".StartActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,7 +51,7 @@
             android:exported="true" /> <!-- Razorpay Payment Activity -->
         <activity
             android:name=".Payment.RazorpayPayment"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".Fragment.UserCancelledFragment"
             android:exported="true" />
@@ -55,7 +63,7 @@
             android:exported="true" />
         <activity
             android:name=".User.UserDisplayRide"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".User.DriverRatingFeedback"
             android:exported="true" />
@@ -79,16 +87,16 @@
             android:exported="true" />
         <activity
             android:name=".User.UserNavigation"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".User.SearchRideActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Driver.ProfileFragment"
             android:exported="true" />
         <activity
             android:name=".Driver.PublishActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Driver.DriverInbox"
             android:exported="true" />
@@ -125,10 +133,12 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
-
         <activity
             android:name=".Splash_Screen"
             android:exported="true" />

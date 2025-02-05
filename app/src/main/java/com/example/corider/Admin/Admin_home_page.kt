@@ -48,7 +48,7 @@ class Admin_home_page : AppCompatActivity() {
 
         // Set OnClickListener for the TextView
         viewRegisteredUsersTextView.setOnClickListener {
-            val intent = Intent(this, RegisteredUsersActivity::class.java) // Create an Intent to start the new activity
+            val intent = Intent(this, View_user::class.java) // Create an Intent to start the new activity
             startActivity(intent) // Start the activity
         }
     }
@@ -103,7 +103,7 @@ class Admin_home_page : AppCompatActivity() {
                     var totalAmount = 0.0
                     for (transactionSnapshot in snapshot.children) {
                         val transaction = transactionSnapshot.getValue(TransactionInfo::class.java)
-                        totalAmount += transaction?.amount ?: 0.0
+                        totalAmount += transaction?.amountPaid ?: 0.0
                     }
                     // Update the TextView with the total amount, formatted as needed
                     sumOfTransactionTextView.text = String.format("%.2f", totalAmount) // Formatting for two decimal places

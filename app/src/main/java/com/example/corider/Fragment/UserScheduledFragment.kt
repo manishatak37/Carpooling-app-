@@ -91,7 +91,10 @@ class UserScheduledFragment : Fragment(R.layout.activity_user_scheduled_fragment
             rideInfoRef.child(rideId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val ride = snapshot.getValue(RideInfo::class.java)
-                    if (ride != null && ride.ride_status == "scheduled") { // Check if the ride is completed
+                    if (ride != null && ride.ride_status == "scheduled") {
+                        Log.d("DriverDisplayRideAdapter", "Ride Category: ${ride.category}")
+                        ride.category = "a"// Check if the ride is completed
+                        Log.d("DriverDisplayRideAdapter", "Ride Category: ${ride.category}")
                         rideInfoList.add(ride) // Add ride details to the list
                     }
                     adapter.notifyDataSetChanged() // Refresh UI after adding data

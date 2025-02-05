@@ -72,10 +72,10 @@ class RidePublishForm : AppCompatActivity() {
         val currentDate = Calendar.getInstance().time
         val maxDate = Calendar.getInstance().apply { add(Calendar.MONTH, 1) }.time
 
-        if (selectedDate.before(currentDate)) {
-            Toast.makeText(this, "Date cannot be in the past.", Toast.LENGTH_SHORT).show()
-            return
-        }
+//        if (selectedDate.before(currentDate)) {
+//            Toast.makeText(this, "Date cannot be in the past.", Toast.LENGTH_SHORT).show()
+//            return
+//        }
         if (selectedDate.after(maxDate)) {
             Toast.makeText(this, "Date cannot be more than one month from now.", Toast.LENGTH_SHORT).show()
             return
@@ -86,10 +86,10 @@ class RidePublishForm : AppCompatActivity() {
             val timeSdf = SimpleDateFormat("HH:mm", Locale.getDefault())
             val selectedTime = timeSdf.parse(time)
             val currentTime = Calendar.getInstance().time
-            if (selectedTime.before(currentTime)) {
-                Toast.makeText(this, "Time cannot be in the past for today.", Toast.LENGTH_SHORT).show()
-                return
-            }
+//            if (selectedTime.before(currentTime)) {
+//                Toast.makeText(this, "Time cannot be in the past for today.", Toast.LENGTH_SHORT).show()
+//                return
+//            }
         }
 
         // Validate passengers

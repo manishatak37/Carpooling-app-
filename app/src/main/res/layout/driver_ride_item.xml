@@ -50,6 +50,12 @@ android:padding="16dp">
         android:layout_height="wrap_content"
         android:text="Price:"
         android:textSize="14sp" />
+    <Button
+        android:id="@+id/redirectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Complete Ride"
+        android:visibility="gone" />
 
 </LinearLayout>
 </androidx.cardview.widget.CardView>

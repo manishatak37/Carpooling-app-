@@ -45,7 +45,7 @@ class DriverRatingFeedback : AppCompatActivity() {
     private fun initializeIds() {
         rideId = "1"
         driverId = "1"
-        userId = getUserIdFromPreferences()
+        userId = "1"
     }
 
     private fun submitFeedback() {

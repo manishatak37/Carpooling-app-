@@ -49,12 +49,16 @@ data class BookingDetails(
     val driverId: String = "",
     val userId: String = "",
     val seatsToBook: Int = 0,
-    val bookingTime: Long = 0L
+    val bookingTime: Long = 0L,
+    val bookingStatus: String,
+    val amountDue: Double
 )
 
 public class RideAdapter(
     private var rideList: List<RideInfo>,
     private val context: Context,
+    private var totalPrice: Double = 0.0
+
 
 ) : RecyclerView.Adapter<RideAdapter.RideViewHolder>() {
 
@@ -115,7 +119,7 @@ public class RideAdapter(
     private fun storeRideDetails(pricePerSeat: Double, seatsToBook: Int) {
         // Calculate the total price
         val sharedPreferencesbooking = context.getSharedPreferences("BookRideDetails", Context.MODE_PRIVATE)
-        val totalPrice = pricePerSeat * seatsToBook
+        totalPrice = pricePerSeat * seatsToBook
 
         // Store the details in SharedPreferences
         val editor = sharedPreferencesbooking.edit()
@@ -191,7 +195,10 @@ public class RideAdapter(
                             driverId = ride.driver_id,
                             userId = userId,
                             seatsToBook = seatsToBook,
-                            bookingTime = System.currentTimeMillis()
+                            bookingTime = System.currentTimeMillis(),
+                            bookingStatus = "pending",
+                            amountDue = totalPrice
+
                         )
 
                         // Perform a Firebase transaction to safely update available seats
@@ -222,6 +229,10 @@ public class RideAdapter(
                                                 // Successfully booked the seats
 
                                                 val intent = Intent(context, RazorpayPayment::class.java)
+                                                intent.putExtra("ride_id", ride.ride_id)
+                                                intent.putExtra("driver_id", ride.driver_id)
+                                                intent.putExtra("user_id", userId)
+                                                intent.putExtra("total_price", totalPrice)
                                                 context.startActivity(intent)
                                                 dialog.dismiss()
                                             }

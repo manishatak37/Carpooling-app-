@@ -89,7 +89,8 @@ class UserCancelledFragment : Fragment(R.layout.activity_user_cancelled_fragment
             rideInfoRef.child(rideId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val ride = snapshot.getValue(RideInfo::class.java)
-                    if (ride != null && ride.ride_status == "cancelled") { // Check if the ride is completed
+                    if (ride != null && ride.ride_status == "cancelled") {
+                        ride.category = ""// Check if the ride is completed
                         rideInfoList.add(ride) // Add ride details to the list
                     }
                     adapter.notifyDataSetChanged() // Refresh UI after adding data
