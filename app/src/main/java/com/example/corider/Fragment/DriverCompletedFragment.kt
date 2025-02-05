@@ -13,13 +13,17 @@ import com.google.firebase.database.*
 
 
 data class RideInfo(
+    val driver_id: String = "",
+    val ride_id:String = "",
     val start_location: String = "",
     val end_location: String = "",
     val departure_date: String = "",
     val departure_time: String = "",
     val price_per_seat: Int = 0,
-    val ride_status: String = "" // Added ride_status field
+    val ride_status: String = "",
+    var category: String = "" // Changed from val to var
 )
+
 
 class DriverCompletedFragment : Fragment(R.layout.activity_driver_completed_fragment) {
 
@@ -63,7 +67,7 @@ class DriverCompletedFragment : Fragment(R.layout.activity_driver_completed_frag
     // Fetch cancelled rides from Firebase and update RecyclerView
     // Fetch rides with "scheduled" status and driver_id = "1" from Firebase and update RecyclerView
     private fun fetchCancelledRides() {
-        database.orderByChild("driver_id").equalTo("zntFzJmA1QTeaEc6EBVcSpRUhed2") // Filter by driver_id = "1"
+        database.orderByChild("driver_id").equalTo(userId) // Filter by driver_id = "1"
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     rideInfoList.clear() // Avoid duplicates
@@ -71,6 +75,7 @@ class DriverCompletedFragment : Fragment(R.layout.activity_driver_completed_frag
                         val ride = data.getValue(RideInfo::class.java)
                         if (ride != null && ride.ride_status == "completed") {
                             // Add to the list if ride_status is "scheduled"
+                            ride.category = ""
                             rideInfoList.add(ride)
                         }
                     }

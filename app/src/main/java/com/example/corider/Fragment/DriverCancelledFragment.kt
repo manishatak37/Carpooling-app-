@@ -55,7 +55,7 @@ class DriverCancelledFragment : Fragment(R.layout.activity_driver_cancelled_frag
     // Fetch cancelled rides from Firebase and update RecyclerView
     // Fetch rides with "scheduled" status and driver_id = "1" from Firebase and update RecyclerView
     private fun fetchCancelledRides() {
-        database.orderByChild("driver_id").equalTo("zntFzJmA1QTeaEc6EBVcSpRUhed2") // Filter by driver_id = "1"
+        database.orderByChild("driver_id").equalTo(userId) // Filter by driver_id = "1"
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     rideInfoList.clear() // Avoid duplicates
@@ -63,6 +63,7 @@ class DriverCancelledFragment : Fragment(R.layout.activity_driver_cancelled_frag
                         val ride = data.getValue(RideInfo::class.java)
                         if (ride != null && ride.ride_status == "cancelled") {
                             // Add to the list if ride_status is "scheduled"
+                            ride.category = ""
                             rideInfoList.add(ride)
                         }
                     }

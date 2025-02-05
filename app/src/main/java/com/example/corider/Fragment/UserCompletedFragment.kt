@@ -94,7 +94,8 @@ class UserCompletedFragment : Fragment(R.layout.activity_user_completed_fragment
             rideInfoRef.child(rideId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val ride = snapshot.getValue(RideInfo::class.java)
-                    if (ride != null && ride.ride_status == "completed") { // Check if the ride is completed
+                    if (ride != null && ride.ride_status == "completed") {
+                        ride.category = ""// Check if the ride is completed
                         rideInfoList.add(ride) // Add ride details to the list
                     }
                     adapter.notifyDataSetChanged() // Refresh UI after adding data

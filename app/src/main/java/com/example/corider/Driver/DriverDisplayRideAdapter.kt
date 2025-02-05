@@ -1,10 +1,14 @@
 package com.example.corider.Driver
 
+import com.example.corider.Driver.Successful_Ride_completed
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.corider.Admin.Admin_home_page
 import com.example.corider.Fragment.RideInfo
 import com.example.corider.R
 
@@ -19,6 +23,7 @@ class DriverDisplayRideAdapter(
         val dateTextView: TextView = itemView.findViewById(R.id.textDate)
         val timeTextView: TextView = itemView.findViewById(R.id.textTime)
         val priceTextView: TextView = itemView.findViewById(R.id.textPrice)
+        val redirectButton: Button = itemView.findViewById(R.id.redirectButton)
     }
 
     // Inflate the item layout and create the ViewHolder
@@ -36,6 +41,20 @@ class DriverDisplayRideAdapter(
         holder.dateTextView.text = "Date: ${ride.departure_date}"
         holder.timeTextView.text = "Time: ${ride.departure_time}"
         holder.priceTextView.text = "Price: ${ride.price_per_seat}"
+        if (ride.category == "scheduled") {
+            holder.redirectButton.visibility = View.VISIBLE
+            holder.redirectButton.setOnClickListener {
+                val context = holder.itemView.context
+                val intent = Intent(context, Successful_Ride_completed::class.java)
+                intent.putExtra("driver_id", ride.driver_id)
+                intent.putExtra("ride_id",ride.ride_id)
+                intent.putExtra("destination", ride.end_location)
+                intent.putExtra("rideDate", ride.departure_date) // Ensure ride date is passed
+                context.startActivity(intent)
+            }
+        } else {
+            holder.redirectButton.visibility = View.INVISIBLE
+        }
     }
 
     // Return the total number of items

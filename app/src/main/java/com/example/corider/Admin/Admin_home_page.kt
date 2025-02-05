@@ -48,7 +48,7 @@ class Admin_home_page : AppCompatActivity() {
 
         // Set OnClickListener for the TextView
         viewRegisteredUsersTextView.setOnClickListener {
-            val intent = Intent(this, RegisteredUsersActivity::class.java) // Create an Intent to start the new activity
+            val intent = Intent(this, View_user::class.java) // Create an Intent to start the new activity
             startActivity(intent) // Start the activity
         }
     }

@@ -65,6 +65,7 @@ class DriverScheduledFragment : Fragment(R.layout.activity_driver_scheduled_frag
                         val ride = data.getValue(RideInfo::class.java)
                         if (ride != null && ride.ride_status == "scheduled") {
                             // Add to the list if ride_status is "scheduled"
+                            ride.category = "scheduled"
                             rideInfoList.add(ride)
                         }
                     }
