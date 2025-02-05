@@ -24,10 +24,10 @@
         tools:targetApi="31">
         <activity
             android:name=".User.ViewBookingActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Driver.Successful_Ride_completed"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Admin.View_feedback"
             android:exported="true" />
@@ -39,7 +39,13 @@
             android:exported="true" />
         <activity
             android:name=".StartActivity"
+            android:exported="true"/>
+
+        <activity
+            android:name=".Splash_Screen"
             android:exported="true">
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -130,18 +136,13 @@
         <activity
             android:name=".SignActivity"
             android:exported="true" />
+
+
         <activity
             android:name=".LoginActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity
-            android:name=".Splash_Screen"
-            android:exported="true" />
+
         <activity
             android:name="com.razorpay.CheckoutActivity"
             android:exported="true" />

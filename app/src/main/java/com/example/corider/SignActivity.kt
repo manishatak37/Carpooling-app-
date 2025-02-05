@@ -72,10 +72,14 @@ class SignActivity : AppCompatActivity() {
             userPassword = binding.password.text.toString().trim()
 
             // Validate input fields
-            if (userName.isBlank() || email.isBlank() || userPassword.isBlank()) {
-                Toast.makeText(this, "Please fill in all details", Toast.LENGTH_SHORT).show()
-            } else if (userPassword.length < 6) {
-                Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+            if (userName.isBlank()) {
+                Toast.makeText(this, "Please enter your name", Toast.LENGTH_SHORT).show()
+            } else if (email.isBlank() || !isValidEmail(email)) {
+                // Show error message for invalid email
+                binding.loginemail.error = "Please enter a valid email (e.g., user@example.com)"
+            } else if (userPassword.isBlank() || userPassword.length < 6) {
+                // Show error message for invalid password length
+                binding.password.error = "Password must be at least 6 characters"
             } else {
                 checkIfEmailExists(email, userPassword)
             }
@@ -139,7 +143,7 @@ class SignActivity : AppCompatActivity() {
                 }
 
                 // Redirect to login
-                val intent = Intent(this, SignActivity::class.java)
+                val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             } else {
@@ -241,18 +245,20 @@ class SignActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign-in success
+                    val user = auth.currentUser
                     Log.d("GoogleSignIn", "signInWithCredential:success")
-                    saveUserDataToUserTable(this, account.displayName ?: "", account.email ?: "", "")
-                    // Redirect to home or another activity
-                    val intent = Intent(this, LoginSelectionActivity::class.java)
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {
-                    // Sign-in failed
                     Log.w("GoogleSignIn", "signInWithCredential:failure", task.exception)
                     Toast.makeText(this, "Authentication Failed.", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    // Helper function to validate email format
+    private fun isValidEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() && email.contains("@")
     }
 }

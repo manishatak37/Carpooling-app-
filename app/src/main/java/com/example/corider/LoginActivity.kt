@@ -1,10 +1,10 @@
 package com.example.corider
 
-
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.widget.Toast
 import com.example.corider.Admin.Admin_home_page
 import com.example.corider.databinding.ActivityLoginBinding
@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        // Button to navigate to Sign Up Activity
+        // Navigate to Sign Up Activity
         binding.donthavebutton.setOnClickListener {
             startActivity(Intent(this, SignActivity::class.java))
         }
@@ -57,17 +57,14 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             email = binding.loginemail.text.toString().trim()
             password = binding.loginpassword.text.toString().trim()
+
             if (email == "admin@gmail.com" && password == "admin") {
                 // Redirect to Admin Home Page
                 val intent = Intent(this, Admin_home_page::class.java)
                 startActivity(intent)
-                finish() // Optional: Finish the login activity so it can't be returned to
-            }
-            else if (validateInput()){                // Normal user login logic
+                finish()
+            } else if (validateInput()) { // Validate before login
                 signInUser(email, password)
-            }
-            else{
-
             }
         }
 
@@ -85,7 +82,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // Handle Google Sign-In result
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
@@ -103,65 +99,61 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("LoginActivity", "signInWithCredential:success")
                     val user = auth.currentUser
                     updateUI(user)
                 } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("LoginActivity", "signInWithCredential:failure", task.exception)
-                    updateUI(null)
+                    Toast.makeText(this, "Google sign-in failed. Try again.", Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
-    // Function to validate input
+    // Function to validate input before login
     private fun validateInput(): Boolean {
-        return when {
-            email.isEmpty() -> {
-                binding.loginemail.error = "Email cannot be empty"
-                binding.loginemail.requestFocus()
-                false
-            }
-            password.isEmpty() -> {
-                binding.loginpassword.error = "Password cannot be empty"
-                binding.loginpassword.requestFocus()
-                false
-            }
-            else -> true
+        if (email.isEmpty()) {
+            binding.loginemail.error = "Email cannot be empty"
+            binding.loginemail.requestFocus()
+            return false
         }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            binding.loginemail.error = "Invalid email format"
+            binding.loginemail.requestFocus()
+            return false
+        }
+        if (password.isEmpty()) {
+            binding.loginpassword.error = "Password cannot be empty"
+            binding.loginpassword.requestFocus()
+            return false
+        }
+        if (password.length < 6) {
+            binding.loginpassword.error = "Password must be at least 6 characters long"
+            binding.loginpassword.requestFocus()
+            return false
+        }
+        return true
     }
-
 
     // Function to sign in user
     private fun signInUser(email: String, password: String) {
-        // Reference to the "user" node in Firebase
         val usersRef = database.child("user")
 
-// Query to get all users
         usersRef.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val usersSnapshot = task.result
-
-                // Iterate over each user in the database
                 var userFound = false
+
                 for (userSnapshot in usersSnapshot.children) {
                     val userEmail = userSnapshot.child("email").getValue(String::class.java)
                     val userPassword = userSnapshot.child("userPassword").getValue(String::class.java)
 
-                    // Check if email and password match
                     if (userEmail == email && userPassword == password) {
                         val userId = userSnapshot.child("userId").getValue(String::class.java)
                         userFound = true
 
-                        // Store userId in SharedPreferences
                         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
                         val editor = sharedPreferences.edit()
                         editor.putString("userID", userId)
                         editor.apply()
-                        Log.d("LoginActivity", "User ID: ${userId}")
 
-                        // Navigate to Main Activity
                         startActivity(Intent(this, LoginSelectionActivity::class.java))
                         finish()
                         break
@@ -169,30 +161,26 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 if (!userFound) {
-                    Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Log.e("LoginActivity", "Error getting users", task.exception)
+                Toast.makeText(this, "Database error. Try again later.", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
-
 
     // Function to navigate to the main activity after successful login
     private fun updateUI(user: FirebaseUser?) {
-        Log.d("LoginActivity", "User ID: ${user?.uid}")
-        user?.let {
-            // Store user ID in SharedPreferences
+        if (user != null) {
             val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             editor.putString("userID", user.uid)
             editor.apply()
 
-            // Navigate to MainActivity
             startActivity(Intent(this, LoginSelectionActivity::class.java))
-            finish() // Optional: Prevent user from returning to login page using back button
+            finish()
+        } else {
+            Toast.makeText(this, "Login failed. Please try again.", Toast.LENGTH_SHORT).show()
         }
     }
-
 }
