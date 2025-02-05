@@ -5,7 +5,7 @@
     android:gravity="bottom"
     android:padding="20dp"
     android:layout_width="match_parent"
-    android:background="#C82525"
+    android:background="@drawable/gradient_bg"
     android:layout_height="180dp">
     
     <androidx.cardview.widget.CardView

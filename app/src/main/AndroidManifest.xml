@@ -30,7 +30,24 @@
             android:exported="true"></activity>
         <activity
             android:name=".Admin.View_user"
+<<<<<<< HEAD
             android:exported="true"></activity>
+=======
+            android:exported="true"/>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".StartActivity"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+>>>>>>> b2548139267cfaebeffc7766f01ad6fb8586dd5d
         <activity
             android:name=".LoginSelectionActivity"
             android:exported="true" /> <!-- Razorpay Payment Activity -->
@@ -84,7 +101,7 @@
             android:exported="true" />
         <activity
             android:name=".Driver.DriverInbox"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".User.RideResultsActivity"
             android:exported="true" />
@@ -124,12 +141,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".StartActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" />
+
+
         <activity
             android:name=".Splash_Screen"
             android:exported="true" />

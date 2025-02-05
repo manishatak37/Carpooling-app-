@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:openDrawer="start"
     android:id="@+id/drawerLayout"
+    android:background="@drawable/homepage_gradient"
     tools:context=".Driver.DriverNavigation">
 
     <include
